@@ -1,5 +1,5 @@
 import { database } from "../firebaseConfig";
-import { ref, push } from "firebase/database"; // Import necessary Firebase functions
+import { ref, push, onValue } from "firebase/database"; // Import necessary Firebase functions
 
 
 /*
@@ -15,7 +15,6 @@ import { ref, push } from "firebase/database"; // Import necessary Firebase func
     * @param {string} appearance - Description of the appearance of individuals involved
     * @param {string} assignedOrg - Organization assigned to handle the report
 */
-
 export async function writeReport(location, time, numPeople, emergencies, isResolved, notes, phoneNumber, email, appearance, assignedOrg) {
     try {
         const reportRef = ref(database, 'report');
@@ -38,5 +37,25 @@ export async function writeReport(location, time, numPeople, emergencies, isReso
         console.log("Report successfully written to the database.");
     } catch (error) {
         console.error("Error writing report to the database:", error);
+    }
+}
+
+/**
+ * Function to listen to changes in the reports table
+ * @param {function} callback - A function to handle the updated reports data
+ */
+export function listenToReports(callback) {
+    try {
+        const reportRef = ref(database, 'report');
+
+        // Set up a real-time listener
+        onValue(reportRef, (snapshot) => {
+            const data = snapshot.val();
+            callback(data);
+        });
+
+        console.log("Listening to changes in the reports table.");
+    } catch (error) {
+        console.error("Error listening to reports:", error);
     }
 }
