@@ -1,17 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Location from "../components/location";
 
 const ReportPage = () => {
-    const [activeTab, setActiveTab] = useState('map');
+    const [activeTab, setActiveTab] = useState("map");
+    const [resources, setResources] = useState([]);
+
+    useEffect(() => {
+        if (activeTab === "resources" && resources.length === 0) {
+            fetch("/resources.txt")
+                .then((res) => res.json())
+                .then((data) => setResources(data))
+                .catch((err) => console.error("Error loading resources:", err));
+        }
+    }, [activeTab]);
 
     const renderContent = () => {
       switch (activeTab) {
         case 'map':
             return <Location />;;
         case 'report':
-          return <div>TBD ..</div>;
+            return <div>TBD ..</div>;
         case 'resources':
-          return <div>TBD ..</div>;
+            return (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {[...Array(6)].map((_, index) => (
+                    <div key={index} className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition duration-300">
+                      <h2 className="text-lg font-bold text-gray-800 mb-2">Resource #{index + 1}</h2>
+                      <p className="text-gray-600 mb-4">Description #{index + 1}</p>
+                      <a 
+                        href={`https://example.com/resource${index + 1}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-blue-500 hover:underline"
+                      >
+                        Link #{index + 1}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+            );
         default:
           return null;
       }
