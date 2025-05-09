@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Location from "../components/location";
 
 const ReportPage = () => {
     const [activeTab, setActiveTab] = useState('map');
@@ -6,7 +7,7 @@ const ReportPage = () => {
     const renderContent = () => {
       switch (activeTab) {
         case 'map':
-          return <div>TBD ..</div>;
+            return <Location />;;
         case 'report':
           return <div>TBD ..</div>;
         case 'resources':

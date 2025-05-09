@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminConsole from './pages/AdminConsole';
 import ReportPage from './pages/ReportPage';
 import './App.css'
+// import Location from './components/location';
 
 const App = () => {
   return (
@@ -12,7 +13,7 @@ const App = () => {
         {/* Add other routes here */}
       </Routes>
     </Router>
-  );
+);
 };
 
 export default App;
