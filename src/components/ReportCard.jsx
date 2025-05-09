@@ -18,7 +18,7 @@ const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) 
             {/* Notes */}
             <div className="p-4 mb-4 bg-gray-100 border border-gray-200 rounded-lg">
                 <p className="text-gray-700 text-base flex items-start gap-2">
-                    🧠 {notes || "No additional notes provided."}
+                    📒 {notes || "No additional notes provided."}
                 </p>
             </div>
 
