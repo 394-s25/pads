@@ -7,7 +7,7 @@ const ReportPage = () => {
 
     useEffect(() => {
         if (activeTab === "resources" && resources.length === 0) {
-            fetch("/resources.txt")
+            fetch("/resources.json")
                 .then((res) => res.json())
                 .then((data) => setResources(data))
                 .catch((err) => console.error("Error loading resources:", err));
@@ -23,20 +23,21 @@ const ReportPage = () => {
         case 'resources':
             return (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {[...Array(6)].map((_, index) => (
-                    <div key={index} className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition duration-300">
-                      <h2 className="text-lg font-bold text-gray-800 mb-2">Resource #{index + 1}</h2>
-                      <p className="text-gray-600 mb-4">Description #{index + 1}</p>
-                      <a 
-                        href={`https://example.com/resource${index + 1}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="text-blue-500 hover:underline"
-                      >
-                        Link #{index + 1}
-                      </a>
-                    </div>
-                  ))}
+                    {resources.map((resource, index) => (
+                        <a
+                            key={index}
+                            href={resource.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block bg-white rounded-2xl shadow-md p-6 transition duration-300 transform hover:scale-105 hover:shadow-xl hover:bg-blue-50 cursor-pointer border border-transparent hover:border-blue-300"
+                        >
+                            <h2 className="text-lg font-bold text-blue-600 mb-2 group-hover:underline">
+                                {resource.title}
+                            </h2>
+                            <p className="text-gray-700">{resource.description}</p>
+                            <p className="mt-4 text-sm text-blue-500 font-medium">Click to visit website →</p>
+                        </a>
+                    ))}
                 </div>
             );
         default:
