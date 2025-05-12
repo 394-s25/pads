@@ -1,19 +1,24 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AdminConsole from './pages/AdminConsole';
-import ReportPage from './pages/ReportPage';
-import './App.css'
+import AdminConsole from "./pages/AdminConsole";
+import ReportPage from "./pages/ReportPage";
+import Landing from "./pages/Landing";
+import "./App.css";
+import { AuthProvider } from "./apis/authProvider";
 // import Location from './components/location';
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<ReportPage />} />
-        <Route path="/admin" element={<AdminConsole />} />
-        {/* Add other routes here */}
-      </Routes>
-    </Router>
-);
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/report" element={<ReportPage />} />
+          <Route path="/admin" element={<AdminConsole />} />
+          <Route path="/" element={<Landing />} />
+          {/* Add other routes here */}
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
 };
 
 export default App;
