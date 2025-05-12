@@ -1,5 +1,5 @@
 const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) => {
-    const { location, time, notes, isResolved } = report;
+    const { location, time, notes, isResolved, emergencyNames } = report;
 
     return (
         <div className="p-6 mb-6 bg-white border border-gray-200 rounded-2xl shadow-md">
@@ -14,6 +14,18 @@ const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) 
                     <p className="flex items-center gap-1">⏱ {new Date(time).toLocaleTimeString()}</p>
                 </div>
             </div>
+
+            {/* Emergencies */}
+            {emergencyNames && emergencyNames.length > 0 && (
+                <div className="p-4 mb-4 bg-red-50 border border-red-200 rounded-lg">
+                    <h3 className="text-lg font-semibold text-red-600 mb-2">🚨 Emergencies</h3>
+                    <ul className="list-disc list-inside text-gray-700">
+                        {emergencyNames.map((emergency, index) => (
+                            <li key={index}>{emergency}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
 
             {/* Notes */}
             <div className="p-4 mb-4 bg-gray-100 border border-gray-200 rounded-lg">

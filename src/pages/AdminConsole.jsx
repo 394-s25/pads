@@ -1,15 +1,52 @@
 import { useState, useEffect } from "react";
-import { listenToReports } from "../apis/firebaseService";
+import { listenToReports, getEmergencyNamesByIndices } from "../apis/firebaseService";
 import ReportCard from "../components/ReportCard";
 
 const AdminConsole = () => {
     const [reports, setReports] = useState({});
+    const [sortedReports, setSortedReports] = useState([]);
+    const [sortBy, setSortBy] = useState("mostRecent");
 
     useEffect(() => {
-        listenToReports((data) => {
-            setReports(data || {});
+        listenToReports(async (data) => {
+            const updatedReports = {};
+
+            for (const [key, report] of Object.entries(data || {})) {
+                const emergencyIndices = report.emergencies || [];
+                const emergencyNames = await getEmergencyNamesByIndices(emergencyIndices);
+
+                updatedReports[key] = {
+                    ...report,
+                    emergencyNames,
+                };
+            }
+
+            setReports(updatedReports);
         });
     }, []);
+
+    useEffect(() => {
+        const sorted = Object.entries(reports).sort(([keyA, reportA], [keyB, reportB]) => {
+            const emergenciesA = reportA.emergencies || [];
+            const emergenciesB = reportB.emergencies || [];
+
+            if (sortBy === "mostRecent") {
+                return new Date(reportB.time) - new Date(reportA.time);
+            } else if (sortBy === "emergencies") {
+                if (emergenciesB.length !== emergenciesA.length) {
+                    return emergenciesB.length - emergenciesA.length;
+                }
+                return new Date(reportB.time) - new Date(reportA.time);
+            }
+            return 0;
+        });
+
+        setSortedReports(sorted);
+    }, [reports, sortBy]);
+
+    const handleSortChange = (e) => {
+        setSortBy(e.target.value);
+    };
 
     const handleViewDetails = (reportId) => {
         console.log("View details for report:", reportId);
@@ -25,10 +62,28 @@ const AdminConsole = () => {
 
     return (
         <div className="p-8">
-            <h1 className="text-2xl font-bold mb-4">Admin Console</h1>
-            <p className="mb-6">Below is the list of reports:</p>
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold">Admin Console</h1>
+            </div>
+
+            <p className="mb-6 text-gray-600">Below is the list of reports:</p>
+             {/* Sort Dropdown */}
+                <div className="flex items-center">
+                    <label htmlFor="sort" className="mr-2 font-semibold text-gray-700">Sort by:</label>
+                    <select
+                        id="sort"
+                        value={sortBy}
+                        onChange={handleSortChange}
+                        className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="mostRecent">Most Recent</option>
+                        <option value="emergencies">Emergencies</option>
+                    </select>
+                </div>
+
+            {/* Reports List */}
             <div>
-                {Object.entries(reports).map(([key, report]) => (
+                {sortedReports.map(([key, report]) => (
                     <ReportCard
                         key={key}
                         report={report}

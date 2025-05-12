@@ -1,5 +1,5 @@
 import { database } from "../firebaseConfig";
-import { ref, push, onValue } from "firebase/database"; // Import necessary Firebase functions
+import { ref, push, onValue, get} from "firebase/database"; // Import necessary Firebase functions
 
 
 /*
@@ -48,7 +48,6 @@ export function listenToReports(callback) {
     try {
         const reportRef = ref(database, 'report');
 
-        // Set up a real-time listener
         onValue(reportRef, (snapshot) => {
             const data = snapshot.val();
             callback(data);
@@ -57,5 +56,31 @@ export function listenToReports(callback) {
         console.log("Listening to changes in the reports table.");
     } catch (error) {
         console.error("Error listening to reports:", error);
+    }
+}
+
+/**
+ * Function to get a list of emergency names based on provided indices
+ * @param {Array<number>} indices - List of indices to fetch emergency names
+ * @returns {Promise<Array<string>>} - A promise that resolves to a list of emergency names
+ */
+export async function getEmergencyNamesByIndices(indices) {
+    try {
+        const emergenciesRef = ref(database, 'Emergencies');
+
+        const snapshot = await get(emergenciesRef);
+        const emergencies = snapshot.val();
+
+        if (!emergencies) {
+            throw new Error("Emergencies table is empty or does not exist.");
+        }
+
+        const emergencyNames = indices.map(index => emergencies[index]);
+
+        console.log("Fetched emergency names:", emergencyNames);
+        return emergencyNames;
+    } catch (error) {
+        console.error("Error fetching emergency names:", error);
+        throw error;
     }
 }
