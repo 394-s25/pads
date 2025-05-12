@@ -66,7 +66,7 @@ const AdminConsole = () => {
   };
 
   const handleViewDetails = (reportId) => {
-    console.log("View details for report:", reportId);
+    navigate(`/admin/${reportId}`);
   };
 
   const handleGetDirections = (location) => {
@@ -88,7 +88,9 @@ const AdminConsole = () => {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Admin Console</h1>
+        <h1 className="text-2xl font-['Manrope'] font-extrabold">
+          Admin Console
+        </h1>
       </div>
 
       <p className="mb-6 text-gray-600">Below is the list of reports:</p>
