@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import LocationMap from "./locationMap";
+import "./location.css";
 
 const Location = () => {
   const [location, setLocation] = useState(null);
@@ -10,7 +12,7 @@ const Location = () => {
         (position) => {
           setLocation({
             latitude: position.coords.latitude,
-            longitude: position.coords.longitude
+            longitude: position.coords.longitude,
           });
         },
         (err) => setError(err.message)
@@ -24,11 +26,15 @@ const Location = () => {
     <div>
       <h3>User Location</h3>
       {location ? (
-        <p>Lat: {location.latitude}, Lng: {location.longitude}</p>
-      ) : error ? (
-        <p style={{ color: 'red' }}>{error}</p>
+        <div className="map-wrapper">
+          <LocationMap
+            id="map"
+            latitude={location.latitude}
+            longitude={location.longitude}
+          ></LocationMap>
+        </div>
       ) : (
-        <p>Fetching location...</p>
+        <p>{error || "Loading location..."}</p>
       )}
     </div>
   );
