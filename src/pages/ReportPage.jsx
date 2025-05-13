@@ -1,9 +1,23 @@
 import { useEffect, useState } from "react";
 import Location from "../components/location";
+import { getEmergencyNamesByIndices, writeReport } from "../apis/firebaseService";
+import ReportForm from "../components/ReportForm";
 
 const ReportPage = () => {
-    const [activeTab, setActiveTab] = useState("map");
+    const [activeTab, setActiveTab] = useState("report");
     const [resources, setResources] = useState([]);
+    const [formData, setFormData] = useState({
+        location: '', // get current location from map
+        time: '', // enter manually with a time input box or select use current time
+        numPeople: 0, // counter with a [- value +], doesn't go below 0, value can also be changed to a number by typing it
+        emergencies: '', // selectable buttons, optional
+        isResolved: false, // not visible
+        notes: '', // larger box
+        phoneNumber: '', // optional
+        email: '', // optional
+        appearance: '', // larger box
+        assignedOrg: 'PADS Lake County' // dropdown with only one option as of now
+    })
 
     useEffect(() => {
         if (activeTab === "resources" && resources.length === 0) {
@@ -14,12 +28,23 @@ const ReportPage = () => {
         }
     }, [activeTab]);
 
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormData((prev) => ({...prev, [name]: value}));
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        console.log('Submitted report:', formData);
+        await writeReport(...Object.values(formData));
+    };
+
     const renderContent = () => {
       switch (activeTab) {
         case 'map':
             return <Location />;;
         case 'report':
-            return <div>TBD ..</div>;
+            return <ReportForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
         case 'resources':
             return (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
