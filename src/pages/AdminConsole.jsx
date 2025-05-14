@@ -74,7 +74,22 @@ const AdminConsole = () => {
   };
 
   const handleMarkResolved = (reportId) => {
-    console.log("Mark report as resolved:", reportId);
+    const updatedReports = { ...reports };
+    delete updatedReports[reportId];
+    setReports(updatedReports);
+    // For now, since we're demoing. Will change to remove from DB later
+    console.log("Removed report:", reportId);
+    //   const reportRef = ref(database, "report/${reportId}");
+    //   remove(reportRef)
+    //     .then(() => {
+    //       console.log("Report removed from DB:", reportId);
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error removing report:", error);
+    //     });
+
+    //   console.log("Mark report as resolved:", reportId);
+    // };
   };
 
   const handleStaffLogout = async () => {
