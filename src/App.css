@@ -27,13 +27,13 @@ body {
   width: 100%;
 }
 
-.title {
+/* .title {
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
-}
+} */
 
-.tabs button {
+/* .tabs button {
   margin-left: 1rem;
   padding: 0.5rem 1rem;
   font-size: 1rem;
@@ -41,7 +41,7 @@ body {
   border: none;
   cursor: pointer;
   color: #555;
-}
+} */
 
 .tabs .active {
   border-bottom: 2px solid #007bff;

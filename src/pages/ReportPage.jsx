@@ -74,25 +74,28 @@ const ReportPage = () => {
 
     return (
         <div>
-            <header className="bg-white p-4 flex items-center justify-between shadow-md">
+            <header className="bg-indigo-900 p-4 flex items-center justify-between shadow-md">
                 <div className="flex justify-between items-center w-full">
-                    <div className="text-xl font-bold text-gray-800">PADS Lake County Good Neighbor</div>
+                    <div className="text-lg font-bold text-white">
+                        <img src="public/padslogo.png" className="w-25"></img>
+                        <h1>Good Neighbor</h1>
+                    </div>
                     <div className="tabs flex">
                         <button 
                             onClick={() => setActiveTab('map')} 
-                            className={`ml-4 px-4 py-2 text-base ${activeTab === 'map' ? 'border-b-2 border-blue-500 text-blue-500 font-bold' : 'text-gray-600'}`}
+                            className={`ml-4 px-4 py-2 text-base ${activeTab === 'map' ? 'border-b-2 border-blue-500 text-white font-bold' : 'text-white'}`}
                         >
                             Map
                         </button>
                         <button 
                             onClick={() => setActiveTab('report')} 
-                            className={`ml-4 px-4 py-2 text-base ${activeTab === 'report' ? 'border-b-2 border-blue-500 text-blue-500 font-bold' : 'text-gray-600'}`}
+                            className={`ml-4 px-4 py-2 text-base ${activeTab === 'report' ? 'border-b-2 border-blue-500 text-white font-bold' : 'text-white'}`}
                         >
                             Report
                         </button>
                         <button 
                             onClick={() => setActiveTab('resources')} 
-                            className={`ml-4 px-4 py-2 text-base ${activeTab === 'resources' ? 'border-b-2 border-blue-500 text-blue-500 font-bold' : 'text-gray-600'}`}
+                            className={`ml-4 px-4 py-2 text-base ${activeTab === 'resources' ? 'border-b-2 border-blue-500 text-white font-bold' : 'text-white'}`}
                         >
                             Resources
                         </button>
