@@ -77,7 +77,7 @@ const ReportPage = () => {
             <header className="bg-indigo-900 p-4 flex items-center justify-between shadow-md">
                 <div className="flex justify-between items-center w-full">
                     <div className="text-lg font-bold text-white">
-                        <img src="public/padslogo.png" className="w-25"></img>
+                        <img src="padslogo.png" className="w-25"></img>
                         <h1>Good Neighbor</h1>
                     </div>
                     <div className="tabs flex">
