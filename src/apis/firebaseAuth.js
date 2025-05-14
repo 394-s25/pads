@@ -8,10 +8,11 @@ export const handleGoogleLogin = async () => {
     const user = result.user;
 
     const isPADSEmail = (email) => {
-      return (
-        email.endsWith("@u.northwestern.edu") || // set to northwestern for testing purposes
-        email.endsWith("@northwestern.edu")
-      );
+      // return (
+      //   email.endsWith("@u.northwestern.edu") || // set to northwestern for testing purposes
+      //   email.endsWith("@northwestern.edu")
+      // );
+      return true;
     };
 
     if (!isPADSEmail(user.email)) {

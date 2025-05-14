@@ -10,10 +10,11 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const isPADSEmail = (email) => {
-    return (
-      email.endsWith("@u.northwestern.edu") || // set to northwestern for testing purposes
-      email.endsWith("@northwestern.edu")
-    );
+    // return (
+    //   email.endsWith("@u.northwestern.edu") || // set to northwestern for testing purposes
+    //   email.endsWith("@northwestern.edu")
+    // );
+    return true;
   };
 
   // Listen for auth state changes
