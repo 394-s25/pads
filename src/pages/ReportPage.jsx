@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Location from "../components/location";
 import { getEmergencyNamesByIndices, writeReport } from "../apis/firebaseService";
 import ReportForm from "../components/ReportForm";
@@ -17,7 +17,10 @@ const ReportPage = () => {
         email: '', // optional
         appearance: '', // larger box
         assignedOrg: 'PADS Lake County' // dropdown with only one option as of now
-    })
+    });
+    const [submissionStatus, setSubmissionStatus] = useState("");  // clear page after submission
+    const reportFormRef = useRef(null);  // uncheck current location/time boxes on submission
+
 
     useEffect(() => {
         if (activeTab === "resources" && resources.length === 0) {
@@ -39,14 +42,52 @@ const ReportPage = () => {
         event.preventDefault();
         console.log('Submitted report:', formData);
         await writeReport(...Object.values(formData));
+
+        // reset form to all blank input boxes
+        setFormData({
+            location: '',
+            time: '',
+            numPeople: 0,
+            emergencies: '',
+            isResolved: false,
+            notes: '',
+            phoneNumber: '',
+            email: '',
+            appearance: '',
+            assignedOrg: 'PADS Lake County'
+        });
+
+        if (reportFormRef.current?.resetToggles) {
+            reportFormRef.current.resetToggles();
+        }  // reset the current location/time check boxes
+
+        // print success message
+        setSubmissionStatus("Report successfully submitted.");
+        
+        // clear message after a few seconds
+        setTimeout(() => setSubmissionStatus(""), 5000);
     };
 
     const renderContent = () => {
       switch (activeTab) {
         case 'map':
-            return <Location />;;
+            return <Location />;
         case 'report':
-            return <ReportForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
+            // return <ReportForm 
+            //     formData={formData} 
+            //     handleChange={handleChange} 
+            //     handleSubmit={handleSubmit} 
+            //     submissionStatus={submissionStatus} // clear and print after submission object
+            // />;
+            return (
+                <ReportForm  // ReportForm --> forwardRef component
+                    ref={reportFormRef}  // uncheck current location/time boxes
+                    formData={formData} 
+                    handleChange={handleChange} 
+                    handleSubmit={handleSubmit} 
+                    submissionStatus={submissionStatus}  // clear and print after submission object
+                />
+            );
         case 'resources':
             return (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

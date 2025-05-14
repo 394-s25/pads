@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import Location from "./location";
 import { getAllEmergencyNames, getIndexByEmergencyName } from "../apis/firebaseService";
 import { v4 as uuid } from "uuid";
@@ -15,12 +15,20 @@ import { v4 as uuid } from "uuid";
 // appearance: '', // larger box
 // assignedOrg: 'PADS Lake County' // dropdown with only one option as of now
 
-const ReportForm = ({ formData, handleChange, handleSubmit }) => {
+//const ReportForm = ({ formData, handleChange, handleSubmit, submissionStatus }) => { ---
+const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionStatus }, ref) => {    
     const [useCurrentLocation, setUseCurrentLocation] = useState(false);
     const [useCurrentTime, setUseCurrentTime] = useState(false);
     const [time, setTime] = useState('');
     const [allEmergencies, setAllEmergencies] = useState([]); // strings
     const [emergencies, setEmergencies] = useState([]); // indices
+
+    useImperativeHandle(ref, () => ({
+        resetToggles() {
+            setUseCurrentLocation(false);
+            setUseCurrentTime(false);
+        }
+    }));
 
     const toggleLocation = () => {
         setUseCurrentLocation((prev) => !prev);
@@ -319,6 +327,9 @@ const ReportForm = ({ formData, handleChange, handleSubmit }) => {
                                 Submit Report
                             </button>
                         </div>
+                        {submissionStatus && (
+                            <p className="mt-4 text-green-700 font-semibold">{submissionStatus}</p>
+                        )}
                     </form>
                 </section>
             </div>
@@ -326,4 +337,5 @@ const ReportForm = ({ formData, handleChange, handleSubmit }) => {
     );
 };
 
+const ReportForm = forwardRef(ReportFormComponent);
 export default ReportForm;
