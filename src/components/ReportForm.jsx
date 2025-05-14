@@ -32,9 +32,22 @@ const ReportForm = ({ formData, handleChange, handleSubmit }) => {
 
     const getCurrentTime = () => {
         var now = new Date();
-        var datetime = now.toTimeString();
+        var datetime = now.toISOString();
         return datetime;
     };
+
+    const formatReadableTime = (isoTime) => {
+    const date = new Date(isoTime);
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+    };
+    return date.toLocaleString(undefined, options);
+};
 
     useEffect(() => {
         const fetchEmergencies = async () => {
@@ -73,13 +86,13 @@ const ReportForm = ({ formData, handleChange, handleSubmit }) => {
     useEffect(() => {
         if (useCurrentTime) {
             const current = getCurrentTime();
-            setTime(current);
+            setTime(formatReadableTime(current)); 
             handleChange({
                 target: {
                     name: 'time',
-                    value: current
-                }})
-            console.log(current);
+                    value: current,
+                },
+            });
         }
     }, [useCurrentTime]);
     // location
@@ -163,9 +176,9 @@ const ReportForm = ({ formData, handleChange, handleSubmit }) => {
                                 Time:*
                                 <div className="flex items-center mt-1">
                                     <input 
-                                        type="time" 
+                                        type="datetime-local" 
                                         name="time" 
-                                        value={formData.time} 
+                                        value={formData.time.slice(0, 16)}
                                         onChange={handleChange} 
                                         disabled={useCurrentTime}
                                         className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" 
