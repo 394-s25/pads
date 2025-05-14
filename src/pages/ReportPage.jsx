@@ -31,6 +31,7 @@ const ReportPage = () => {
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prev) => ({...prev, [name]: value}));
+        console.log(formData);
     };
 
     const handleSubmit = async (event) => {

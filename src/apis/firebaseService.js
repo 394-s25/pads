@@ -104,3 +104,28 @@ export async function getAllEmergencyNames() {
         throw error;
     }
 }
+
+export async function getIndexByEmergencyName(emergency) {
+    try {
+        const emergenciesRef = ref(database, 'Emergencies');
+
+        const snapshot = await get(emergenciesRef);
+        const emergencies = snapshot.val();
+        
+        if (!emergencies) {
+            throw new Error("Emergencies table is empty or does not exist.");
+        }
+
+        const index = Object.keys(emergencies).find(
+            key => emergencies[key] === emergency
+        );
+
+        if (index === undefined) {
+            throw new Error(`Emergency name "${emergency}" not found.`);
+        }
+        return index;
+    } catch (error) {
+        console.error("Error fetching index:", error);
+        throw error;
+    }
+}
