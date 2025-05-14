@@ -77,8 +77,10 @@ const AdminConsole = () => {
     const updatedReports = { ...reports };
     delete updatedReports[reportId];
     setReports(updatedReports);
-    // For now, since we're demoing. Will change to remove from DB later
     console.log("Removed report:", reportId);
+    // TODO: Fix it to either
+    // 1. Remove from reports field and add it a resolvedReports field
+    // 2. Set is_removed to True
     //   const reportRef = ref(database, "report/${reportId}");
     //   remove(reportRef)
     //     .then(() => {
