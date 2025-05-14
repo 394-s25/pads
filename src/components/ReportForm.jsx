@@ -46,7 +46,32 @@ const ReportForm = ({ formData, handleChange, handleSubmit }) => {
             console.log(current);
         }
     }, [useCurrentTime]);
-    
+    // location
+    useEffect(() => {
+        if (useCurrentLocation && "geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              handleChange({
+                target: {
+                  name: 'location',
+                  value: `${latitude}, ${longitude}`
+                }
+              });
+            },
+            (error) => {
+              console.error("Failed to get location:", error);
+              handleChange({
+                target: {
+                  name: 'location',
+                  value: "Location unavailable"
+                }
+              });
+            }
+          );
+        }
+      }, [useCurrentLocation]);
+      
     return (
         <div style={{ padding: '2rem', maxWidth: '800px', margin: 'auto' }}>
             <header style={{ marginBottom: '2rem' }}>
@@ -65,7 +90,14 @@ const ReportForm = ({ formData, handleChange, handleSubmit }) => {
                 <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
                 <label>
                     Location:*
-                    <input name="location" value={formData.location} onChange={handleChange} disabled={useCurrentLocation} required className="border"/>
+                    <input
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    disabled={useCurrentLocation}
+                    required
+                    className="border w-90 px-3 py-2 rounded-md"
+                    />
                     <input type="checkbox" name="location-bool" checked={useCurrentLocation} onChange={toggleLocation} />
                     Use my current location
                 </label>

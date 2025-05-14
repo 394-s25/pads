@@ -27,6 +27,7 @@ const ReportPage = () => {
                 .catch((err) => console.error("Error loading resources:", err));
         }
     }, [activeTab]);
+    
 
     const handleChange = (event) => {
         const { name, value } = event.target;
