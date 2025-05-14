@@ -82,7 +82,32 @@ const ReportForm = ({ formData, handleChange, handleSubmit }) => {
             console.log(current);
         }
     }, [useCurrentTime]);
-    
+    // location
+    useEffect(() => {
+        if (useCurrentLocation && "geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              handleChange({
+                target: {
+                  name: 'location',
+                  value: `${latitude}, ${longitude}`
+                }
+              });
+            },
+            (error) => {
+              console.error("Failed to get location:", error);
+              handleChange({
+                target: {
+                  name: 'location',
+                  value: "Location unavailable"
+                }
+              });
+            }
+          );
+        }
+      }, [useCurrentLocation]);
+      
     return (
         <div className="bg-gray-50 min-h-screen">
             <div className="container mx-auto p-6 max-w-4xl">
