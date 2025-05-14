@@ -84,3 +84,23 @@ export async function getEmergencyNamesByIndices(indices) {
         throw error;
     }
 }
+
+export async function getAllEmergencyNames() {
+    try {
+        const emergenciesRef = ref(database, 'Emergencies');
+
+        const snapshot = await get(emergenciesRef);
+        const emergencies = snapshot.val();
+        
+        if (!emergencies) {
+            throw new Error("Emergencies table is empty or does not exist.");
+        }
+
+        const emergencyNames = Object.values(emergencies);
+        console.log("Fetched all emergency names: ", emergencyNames);
+        return emergencyNames;
+    } catch (error) {
+        console.error("Error fetching all emergency names:", error);
+        throw error;
+    }
+}
