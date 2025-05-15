@@ -40,13 +40,13 @@ const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) 
                     onClick={onViewDetails}
                     className="px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
                 >
-                    👁 View Details
+                    View Details
                 </button>
                 <button
                     onClick={onGetDirections}
                     className="px-5 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition"
                 >
-                    📍 Directions
+                    Directions
                 </button>
                 <button
                     onClick={onMarkResolved}
@@ -57,7 +57,7 @@ const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) 
                             : "bg-yellow-500 text-white hover:bg-yellow-600"
                     }`}
                 >
-                    {isResolved ? "✔️ Resolved" : "✔️ Mark Resolved"}
+                    {isResolved ? "Resolved" : "Mark Resolved"}
                 </button>
             </div>
         </div>
