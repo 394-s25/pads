@@ -6,7 +6,7 @@ const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) 
             {/* Header */}
             <div className="flex justify-between items-start mb-4">
                 <div>
-                    <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">🧍 Reporter</h2>
+                    <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">Reporter</h2>
                     <p className="text-gray-600 flex items-center gap-1 text-base">📍 {location}</p>
                 </div>
                 <div className="text-right text-gray-600 text-sm space-y-1">
@@ -18,7 +18,7 @@ const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) 
             {/* Emergencies */}
             {emergencyNames && emergencyNames.length > 0 && (
                 <div className="p-4 mb-4 bg-red-50 border border-red-200 rounded-lg">
-                    <h3 className="text-lg font-semibold text-red-600 mb-2">🚨 Emergencies</h3>
+                    <h3 className="text-lg font-semibold text-red-600 mb-2">Emergencies</h3>
                     <ul className="list-disc list-inside text-gray-700">
                         {emergencyNames.map((emergency, index) => (
                             <li key={index}>{emergency}</li>
@@ -30,7 +30,7 @@ const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) 
             {/* Notes */}
             <div className="p-4 mb-4 bg-gray-100 border border-gray-200 rounded-lg">
                 <p className="text-gray-700 text-base flex items-start gap-2">
-                    📒 {notes || "No additional notes provided."}
+                    {notes || "No additional notes provided."}
                 </p>
             </div>
 
