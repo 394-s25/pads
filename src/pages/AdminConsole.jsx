@@ -5,6 +5,7 @@ import {
   getEmergencyNamesByIndices,
 } from "../apis/firebaseService";
 import ReportCard from "../components/ReportCard";
+import NavBar from "../components/NavBar";
 import { useAuth } from "../apis/authProvider";
 
 const AdminConsole = () => {
@@ -13,6 +14,7 @@ const AdminConsole = () => {
   const [reports, setReports] = useState({});
   const [sortedReports, setSortedReports] = useState([]);
   const [sortBy, setSortBy] = useState("mostRecent");
+  const [activeTab, setActiveTab] = useState("allReports"); // Default tab
 
   useEffect(() => {
     if (!authUser) {
@@ -88,39 +90,30 @@ const AdminConsole = () => {
     }
   };
 
-  return (
-    <div className="p-8">
-      {/* Header Section */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-['Manrope'] font-extrabold">
-          Admin Console
-        </h1>
-        <button
-          onClick={handleStaffLogout}
-          className="bg-indigo-200 hover:bg-indigo-300 text-indigo-900 font-bold py-2 px-6 rounded-full text-sm"
-        >
-          Logout
-        </button>
-      </div>
+  const renderContent = () => {
+    if (activeTab === "resolvedReports") {
+      // Filter resolved reports
+      const resolvedReports = Object.entries(reports).filter(
+        ([, report]) => report.isResolved
+      );
 
-      <p className="mb-6 text-gray-600">Below is the list of reports:</p>
-      {/* Sort Dropdown */}
-      <div className="flex items-center mb-4">
-        <label htmlFor="sort" className="mr-2 font-semibold text-gray-700">
-          Sort by:
-        </label>
-        <select
-          id="sort"
-          value={sortBy}
-          onChange={handleSortChange}
-          className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="mostRecent">Most Recent</option>
-          <option value="emergencies">Emergencies</option>
-        </select>
-      </div>
+      return (
+        <div>
+          {resolvedReports.map(([key, report]) => (
+            <ReportCard
+              key={key}
+              report={report}
+              onViewDetails={() => handleViewDetails(key)}
+              onGetDirections={() => handleGetDirections(report.location)}
+              onMarkResolved={() => handleMarkResolved(key)}
+            />
+          ))}
+        </div>
+      );
+    }
 
-      {/* Reports List */}
+    // Default: All reports
+    return (
       <div>
         {sortedReports.map(([key, report]) => (
           <ReportCard
@@ -132,6 +125,37 @@ const AdminConsole = () => {
           />
         ))}
       </div>
+    );
+  };
+
+  return (
+    <div className="p-8">
+      {/* NavBar */}
+      <NavBar
+        logoSrc="padslogo.png"
+        title="Admin Console"
+        tabs={[
+          { id: "unresolvedReports", label: "Unresolved Reports" },
+          { id: "resolvedReports", label: "Resolved Reports" },
+        ]}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
+
+      {/* Logout Button */}
+      <div className="flex justify-end mt-4">
+        <button
+          onClick={handleStaffLogout}
+          className="bg-indigo-200 hover:bg-indigo-300 text-indigo-900 font-bold py-2 px-6 rounded-full text-sm"
+        >
+          Logout
+        </button>
+      </div>
+
+      <p className="mb-6 text-gray-600">Below is the list of reports:</p>
+
+      {/* Render Content Based on Active Tab */}
+      {renderContent()}
     </div>
   );
 };
