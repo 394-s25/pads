@@ -78,20 +78,6 @@ const AdminConsole = () => {
     delete updatedReports[reportId];
     setReports(updatedReports);
     console.log("Removed report:", reportId);
-    // TODO: Fix it to either
-    // 1. Remove from reports field and add it a resolvedReports field
-    // 2. Set is_removed to True
-    //   const reportRef = ref(database, "report/${reportId}");
-    //   remove(reportRef)
-    //     .then(() => {
-    //       console.log("Report removed from DB:", reportId);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error removing report:", error);
-    //     });
-
-    //   console.log("Mark report as resolved:", reportId);
-    // };
   };
 
   const handleStaffLogout = async () => {
@@ -104,15 +90,22 @@ const AdminConsole = () => {
 
   return (
     <div className="p-8">
+      {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-['Manrope'] font-extrabold">
           Admin Console
         </h1>
+        <button
+          onClick={handleStaffLogout}
+          className="bg-indigo-200 hover:bg-indigo-300 text-indigo-900 font-bold py-2 px-6 rounded-full text-sm"
+        >
+          Logout
+        </button>
       </div>
 
       <p className="mb-6 text-gray-600">Below is the list of reports:</p>
       {/* Sort Dropdown */}
-      <div className="flex items-center">
+      <div className="flex items-center mb-4">
         <label htmlFor="sort" className="mr-2 font-semibold text-gray-700">
           Sort by:
         </label>
@@ -139,12 +132,6 @@ const AdminConsole = () => {
           />
         ))}
       </div>
-      <button
-        onClick={handleStaffLogout}
-        className="bg-indigo-200 hover:bg-indigo-300 text-indigo-900 font-bold py-3 px-8 rounded-full flex items-center text-sm"
-      >
-        Logout
-      </button>
     </div>
   );
 };
