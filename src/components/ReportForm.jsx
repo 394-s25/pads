@@ -170,7 +170,7 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
 
                         <div className="form-group">
                             <label className="block text-gray-700 font-medium mb-2">
-                                Time:*
+                                Time of Observance:*
                                 <div className="flex items-center mt-1">
                                     <input 
                                         type="datetime-local" 
@@ -244,7 +244,7 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
 
                         <div className="form-group">
                             <label className="block text-gray-700 font-medium mb-2">
-                                Appearance:
+                                Personal/Household description:
                                 <textarea 
                                     name="appearance" 
                                     value={formData.appearance} 
