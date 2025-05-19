@@ -14,7 +14,7 @@ const App = () => {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/create" />} /> 
+          <Route path="/" element={<Landing />} />
           <Route path="/create" element={<ReportPage />} /> 
           <Route path="/drafts" element={<DraftsPage />} />  
           <Route path="/status" element={<ReportStatusPage />} /> 

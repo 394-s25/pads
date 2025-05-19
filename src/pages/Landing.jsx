@@ -22,7 +22,7 @@ const Landing = () => {
   };
 
   const handleReport = () => {
-    navigate("/report");
+    navigate("/create/report");
   };
 
   return (
