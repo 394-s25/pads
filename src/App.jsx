@@ -1,8 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import AdminConsole from "./pages/AdminConsole";
 import ReportPage from "./pages/ReportPage";
 import Landing from "./pages/Landing";
 import ViewReport from "./pages/viewReport";
+import DraftsPage from "./pages/DraftsPage";
+import ReportStatusPage from "./pages/ReportStatusPage";
 import "./App.css";
 import { AuthProvider } from "./apis/authProvider";
 // import Location from './components/location';
@@ -12,11 +14,15 @@ const App = () => {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/report" element={<ReportPage />} />
+          <Route path="/" element={<Navigate to="/create" />} /> 
+          <Route path="/create" element={<ReportPage />} /> 
+          <Route path="/drafts" element={<DraftsPage />} />  
+          <Route path="/status" element={<ReportStatusPage />} /> 
           <Route path="/admin" element={<AdminConsole />} />
           <Route path="/admin/:reportId" element={<ViewReport />} />
-          <Route path="/" element={<Landing />} />
-          {/* Add other routes here */}
+          <Route path="/landing" element={<Landing />} /> 
+          <Route path="/create" element={<Navigate to="/create/report" />} />
+          <Route path="/create/:section" element={<ReportPage />} />
         </Routes>
       </Router>
     </AuthProvider>

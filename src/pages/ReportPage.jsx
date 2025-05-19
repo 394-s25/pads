@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
 import Location from "../components/location";
-import { getEmergencyNamesByIndices, writeReport, getReportById } from "../apis/firebaseService";
+import { writeReport } from "../apis/firebaseService";
 import ReportForm from "../components/ReportForm";
-import NavBar from "../components/NavBar";
+import ReportLayout from "../components/ReportLayout";
 
 const ReportPage = () => {
-    const [activeTab, setActiveTab] = useState("report");
+    const { section } = useParams(); // 'report', 'map', or 'resources'
     const [resources, setResources] = useState([]);
     const [formData, setFormData] = useState({
         location: "",
@@ -23,13 +24,13 @@ const ReportPage = () => {
     const reportFormRef = useRef(null);
 
     useEffect(() => {
-        if (activeTab === "resources" && resources.length === 0) {
+        if (section === "resources" && resources.length === 0) {
             fetch("/resources.json")
                 .then((res) => res.json())
                 .then((data) => setResources(data))
                 .catch((err) => console.error("Error loading resources:", err));
         }
-    }, [activeTab]);
+    }, [section]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -42,7 +43,7 @@ const ReportPage = () => {
         console.log("Submitted report:", formData);
         
         try {
-            const reportId = await writeReport(...Object.values(formData));  // store report id
+            const reportId = await writeReport(...Object.values(formData));
 
             setFormData({
                 location: "",
@@ -62,28 +63,16 @@ const ReportPage = () => {
             }
 
             setSubmissionStatus(`Report successfully submitted. Your report ID is: ${reportId}`);
-            //setTimeout(() => setSubmissionStatus(""), 5000);  // message clears after 5 seconds
-        }
-        catch (error) {
+        } catch (error) {
             console.error("Error submitting report:", error);
             setSubmissionStatus("There was an error submitting the report. Please try again.");
         }
     };
 
     const renderContent = () => {
-        switch (activeTab) {
+        switch (section) {
             case "map":
                 return <Location />;
-            case "report":
-                return (
-                    <ReportForm
-                        ref={reportFormRef}
-                        formData={formData}
-                        handleChange={handleChange}
-                        handleSubmit={handleSubmit}
-                        submissionStatus={submissionStatus}
-                    />
-                );
             case "resources":
                 return (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -104,27 +93,21 @@ const ReportPage = () => {
                         ))}
                     </div>
                 );
+            case "report":
             default:
-                return null;
+                return (
+                    <ReportForm
+                        ref={reportFormRef}
+                        formData={formData}
+                        handleChange={handleChange}
+                        handleSubmit={handleSubmit}
+                        submissionStatus={submissionStatus}
+                    />
+                );
         }
     };
 
-    return (
-        <div>
-            <NavBar
-                logoSrc="padslogo.png"
-                title="Good Neighbor"
-                tabs={[
-                    { id: "map", label: "Map" },
-                    { id: "report", label: "Report" },
-                    { id: "resources", label: "Resources" },
-                ]}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-            />
-            <main className="p-8 text-lg">{renderContent()}</main>
-        </div>
-    );
+    return <ReportLayout>{renderContent()}</ReportLayout>;
 };
 
 export default ReportPage;

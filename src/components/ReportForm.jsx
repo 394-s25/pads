@@ -130,17 +130,6 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
       }, [useCurrentLocation]);
       
     return (
-        <div className="bg-gray-50 min-h-screen">
-            <div className="container mx-auto p-6 max-w-4xl">
-                <header className="mb-8 border-b border-gray-300 pb-4">
-                    <h1 className="text-3xl font-bold text-indigo-900">Reports</h1>
-                    <div className="flex gap-4 mt-4">
-                        <button className="bg-indigo-600 text-white px-4 py-2 rounded-full font-medium shadow-md hover:bg-indigo-700 transition-colors border border-slate-100">Create Report</button>
-                        <button className="bg-indigo-200 text-gray-700 px-4 py-2 rounded-full font-medium shadow-md hover:bg-gray-300 transition-colors border border-slate-100">Saved Drafts</button>
-                        <button className="bg-indigo-200 text-gray-700 px-4 py-2 rounded-full font-medium shadow-md hover:bg-gray-300 transition-colors border border-slate-100">Report Status</button>
-                    </div>
-                </header>
-
                 <section className="bg-white p-6 rounded-xl shadow-lg">
                     <h2 className="text-2xl font-semibold text-gray-800 mb-2">Create a New Report</h2>
                     <p className="text-gray-600 mb-6">Please fill out the form below to submit a new report.</p>
@@ -332,8 +321,6 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
                         )}
                     </form>
                 </section>
-            </div>
-        </div>
     );
 };
 
