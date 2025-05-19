@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import Location from "../components/location";
-import { getEmergencyNamesByIndices, writeReport } from "../apis/firebaseService";
+import { getEmergencyNamesByIndices, writeReport, getReportById } from "../apis/firebaseService";
 import ReportForm from "../components/ReportForm";
 import NavBar from "../components/NavBar";
 
@@ -40,27 +40,34 @@ const ReportPage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         console.log("Submitted report:", formData);
-        await writeReport(...Object.values(formData));
+        
+        try {
+            const reportId = await writeReport(...Object.values(formData));  // store report id
 
-        setFormData({
-            location: "",
-            time: "",
-            numPeople: 0,
-            emergencies: "",
-            isResolved: false,
-            notes: "",
-            phoneNumber: "",
-            email: "",
-            appearance: "",
-            assignedOrg: "PADS Lake County",
-        });
+            setFormData({
+                location: "",
+                time: "",
+                numPeople: 0,
+                emergencies: "",
+                isResolved: false,
+                notes: "",
+                phoneNumber: "",
+                email: "",
+                appearance: "",
+                assignedOrg: "PADS Lake County",
+            });
 
-        if (reportFormRef.current?.resetToggles) {
-            reportFormRef.current.resetToggles();
+            if (reportFormRef.current?.resetToggles) {
+                reportFormRef.current.resetToggles();
+            }
+
+            setSubmissionStatus(`Report successfully submitted. Your report ID is: ${reportId}`);
+            //setTimeout(() => setSubmissionStatus(""), 5000);  // message clears after 5 seconds
         }
-
-        setSubmissionStatus("Report successfully submitted.");
-        setTimeout(() => setSubmissionStatus(""), 5000);
+        catch (error) {
+            console.error("Error submitting report:", error);
+            setSubmissionStatus("There was an error submitting the report. Please try again.");
+        }
     };
 
     const renderContent = () => {
