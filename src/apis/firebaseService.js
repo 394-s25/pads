@@ -1,6 +1,5 @@
 import { database } from "../firebaseConfig";
-import { ref, push, onValue, get, set} from "firebase/database"; // Import necessary Firebase functions
-
+import { ref, push, onValue, get, set, update} from "firebase/database"; // Import necessary Firebase functions
 
 /*
     * Function to write a report to the Firebase Realtime Database
@@ -149,6 +148,17 @@ export async function getReportById(reportId) {
         return snapshot.val();
     } catch (error) {
         console.error("Error retrieving report by ID:", error);
+        throw error;
+    }
+}
+
+export async function updateIsResolved(reportId, isResolved) {
+    try {
+        const reportRef = ref(database, `report/${reportId}`);
+        await update(reportRef, { isResolved });
+        console.log(`Successfully updated isResolved to ${isResolved} for report ID: ${reportId}`);
+    } catch (error) {
+        console.error("Error updating isResolved:", error);
         throw error;
     }
 }
