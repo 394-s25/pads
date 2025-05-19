@@ -156,7 +156,7 @@ const ViewReport = () => {
         </div>
       </div>
       <button className="mt-8 w-full bg-white hover:bg-indigo-50 text-indigo-900 font-['Manrope'] font-bold py-4 px-4 rounded-full border-2 border-indigo-900">
-        Mark as Resolved
+        {report.isResolved? "Mark as Unresolved" : "Mark as Resolved"}
       </button>
     </div>
   );
