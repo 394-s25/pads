@@ -69,8 +69,8 @@ const AdminConsole = () => {
     setActiveTab(tab || "unresolvedReports");
   }, [tab]);
 
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
+  const handleSortChange = (sortOption) => {
+    setSortBy(sortOption); // Update the sortBy state
   };
 
   const handleViewDetails = (reportId) => {
@@ -101,19 +101,19 @@ const AdminConsole = () => {
 
   const handleMarkUnresolved = async (reportId) => {
     try {
-        await updateIsResolved(reportId, false);
+      await updateIsResolved(reportId, false);
 
-        setReports((prevReports) => ({
-            ...prevReports,
-            [reportId]: {
-                ...prevReports[reportId],
-                isResolved: false,
-            },
-        }));
+      setReports((prevReports) => ({
+        ...prevReports,
+        [reportId]: {
+          ...prevReports[reportId],
+          isResolved: false,
+        },
+      }));
 
-        console.log(`Report ${reportId} marked as unresolved.`);
+      console.log(`Report ${reportId} marked as unresolved.`);
     } catch (error) {
-        console.error("Error marking report as unresolved:", error);
+      console.error("Error marking report as unresolved:", error);
     }
   };
 
@@ -126,47 +126,47 @@ const AdminConsole = () => {
   };
 
   const renderContent = () => {
-      if (activeTab === "resolvedReports") {
-          const resolvedReports = Object.entries(reports).filter(
-              ([, report]) => report.isResolved
-          );
+    if (activeTab === "resolvedReports") {
+      const resolvedReports = sortedReports.filter(
+        ([, report]) => report.isResolved
+      );
 
-          return (
-              <div>
-                  {resolvedReports.map(([key, report]) => (
-                      <ReportCard
-                          key={key}
-                          report={report}
-                          onViewDetails={() => handleViewDetails(key)}
-                          onGetDirections={() => handleGetDirections(report.location)}
-                          onMarkResolved={() => handleMarkUnresolved(key)}
-                      />
-                  ))}
-              </div>
-          );
-      }
+      return (
+        <div>
+          {resolvedReports.map(([key, report]) => (
+            <ReportCard
+              key={key}
+              report={report}
+              onViewDetails={() => handleViewDetails(key)}
+              onGetDirections={() => handleGetDirections(report.location)}
+              onMarkResolved={() => handleMarkUnresolved(key)}
+            />
+          ))}
+        </div>
+      );
+    }
 
-      if (activeTab === "unresolvedReports") {
-          const unresolvedReports = Object.entries(reports).filter(
-              ([, report]) => !report.isResolved
-          );
+    if (activeTab === "unresolvedReports") {
+      const unresolvedReports = sortedReports.filter(
+        ([, report]) => !report.isResolved
+      );
 
-          return (
-              <div>
-                  {unresolvedReports.map(([key, report]) => (
-                      <ReportCard
-                          key={key}
-                          report={report}
-                          onViewDetails={() => handleViewDetails(key)}
-                          onGetDirections={() => handleGetDirections(report.location)}
-                          onMarkResolved={() => handleMarkResolved(key)}
-                      />
-                  ))}
-              </div>
-          );
-      }
+      return (
+        <div>
+          {unresolvedReports.map(([key, report]) => (
+            <ReportCard
+              key={key}
+              report={report}
+              onViewDetails={() => handleViewDetails(key)}
+              onGetDirections={() => handleGetDirections(report.location)}
+              onMarkResolved={() => handleMarkResolved(key)}
+            />
+          ))}
+        </div>
+      );
+    }
 
-      return null; // Fallback in case no activeTab matches
+    return null; // Fallback in case no activeTab matches
   };
 
   return (
@@ -183,6 +183,30 @@ const AdminConsole = () => {
         setActiveTab={(tab) => navigate(`/admin/${tab}`)}
       />
 
+      {/* Sort Buttons */}
+      <div className="flex justify-end gap-4 mt-4">
+        <button
+          onClick={() => handleSortChange("mostRecent")}
+          className={`px-4 py-2 text-sm font-medium rounded-md ${
+            sortBy === "mostRecent"
+              ? "bg-indigo-600 text-white"
+              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+          }`}
+        >
+          Sort by Date
+        </button>
+        <button
+          onClick={() => handleSortChange("emergencies")}
+          className={`px-4 py-2 text-sm font-medium rounded-md ${
+            sortBy === "emergencies"
+              ? "bg-indigo-600 text-white"
+              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+          }`}
+        >
+          Sort by Emergency
+        </button>
+      </div>
+
       {/* Logout Button */}
       <div className="flex justify-end mt-4">
         <button
@@ -192,7 +216,6 @@ const AdminConsole = () => {
           Logout
         </button>
       </div>
-
 
       {/* Render Content Based on Active Tab */}
       {renderContent()}
