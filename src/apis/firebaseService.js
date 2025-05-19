@@ -1,5 +1,5 @@
 import { database } from "../firebaseConfig";
-import { ref, push, onValue, get} from "firebase/database"; // Import necessary Firebase functions
+import { ref, push, onValue, get, set} from "firebase/database"; // Import necessary Firebase functions
 
 
 /*
@@ -19,6 +19,10 @@ export async function writeReport(location, time, numPeople, emergencies, isReso
     try {
         const reportRef = ref(database, 'report');
 
+        // make new report with a unique ID
+        const newReportRef = push(reportRef);
+        const reportId = newReportRef.key;
+
         const reportData = {
             location,
             time,
@@ -30,13 +34,16 @@ export async function writeReport(location, time, numPeople, emergencies, isReso
             email,
             appearance,
             assignedOrg,
+            id: reportId // add id for searching
         };
 
-        await push(reportRef, reportData);
+        await set(newReportRef, reportData); // use set to write full data
 
-        console.log("Report successfully written to the database.");
+        console.log("Report written with ID:", reportId);
+        return reportId; // return the ID so the caller can use/display it
     } catch (error) {
-        console.error("Error writing report to the database:", error);
+        console.error("Error writing report:", error);
+        throw error;
     }
 }
 
@@ -126,6 +133,22 @@ export async function getIndexByEmergencyName(emergency) {
         return index;
     } catch (error) {
         console.error("Error fetching index:", error);
+        throw error;
+    }
+}
+
+export async function getReportById(reportId) {
+    try {
+        const singleReportRef = ref(database, `report/${reportId}`);
+        const snapshot = await get(singleReportRef);
+
+        if (!snapshot.exists()) {
+            throw new Error("No report found with ID: " + reportId);
+        }
+
+        return snapshot.val();
+    } catch (error) {
+        console.error("Error retrieving report by ID:", error);
         throw error;
     }
 }
