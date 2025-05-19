@@ -12,7 +12,7 @@ import { useAuth } from "../apis/authProvider";
 const AdminConsole = () => {
   const { authUser, logout } = useAuth();
   const navigate = useNavigate();
-  const { tab } = useParams(); // Get the tab from the URL
+  const { tab } = useParams();
   const [reports, setReports] = useState({});
   const [sortedReports, setSortedReports] = useState([]);
   const [sortBy, setSortBy] = useState("mostRecent");
@@ -70,7 +70,7 @@ const AdminConsole = () => {
   }, [tab]);
 
   const handleSortChange = (sortOption) => {
-    setSortBy(sortOption); // Update the sortBy state
+    setSortBy(sortOption); 
   };
 
   const handleViewDetails = (reportId) => {
@@ -166,7 +166,7 @@ const AdminConsole = () => {
       );
     }
 
-    return null; // Fallback in case no activeTab matches
+    return null;
   };
 
   return (

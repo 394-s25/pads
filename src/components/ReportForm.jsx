@@ -59,8 +59,8 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
 
     useEffect(() => {
         const fetchEmergencies = async () => {
-            const result = await getAllEmergencyNames(); // should return an object
-            setAllEmergencies(Object.values(result));    // convert to array
+            const result = await getAllEmergencyNames(); 
+            setAllEmergencies(Object.values(result)); 
         };
 
         fetchEmergencies();
@@ -103,7 +103,6 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
             });
         }
     }, [useCurrentTime]);
-    // location
     useEffect(() => {
         if (useCurrentLocation && "geolocation" in navigator) {
           navigator.geolocation.getCurrentPosition(
@@ -208,7 +207,7 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
                                 Emergencies:
                                 <div className="flex flex-wrap gap-2 mt-2">
                                 {allEmergencies.map((emergency, index) => {
-                                    const isSelected = emergencies.includes(index.toString()); // emergency index as string
+                                    const isSelected = emergencies.includes(index.toString()); 
                                     return (
                                         <button
                                             type="button"
