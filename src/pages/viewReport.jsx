@@ -28,16 +28,17 @@ const ViewReport = () => {
       return;
     }
 
-    const fetchReport = async () => {
-      try {
-        const reportData = await getReport(reportId);
-        setReport(reportData);
-      } catch (error) {
-        console.error("error fetching report:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchReport = async () => {
+    try {
+      const reportData = await getReport(reportId);
+      console.log("Fetched report data:", reportData);
+      setReport(reportData);
+    } catch (error) {
+      console.error("error fetching report:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
     fetchReport();
   }, [reportId, authUser, navigate]);
@@ -62,13 +63,15 @@ const ViewReport = () => {
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold font-['Manrope']">View Report</h1>
-        <button
-          onClick={() => navigate("/admin")}
-          className="bg-indigo-200 hover:bg-indigo-300 text-indigo-900 font-['Manrope'] font-bold py-2 px-4 rounded-full flex items-center gap-2"
-        >
-          <ArrowLeft size={18} />
-          Back to Admin
-        </button>
+          <button
+              onClick={() =>
+                  navigate(report.isResolved ? "/admin/resolvedReports" : "/admin/unresolvedReports")
+              }
+              className="bg-indigo-200 hover:bg-indigo-300 text-indigo-900 font-['Manrope'] font-bold py-2 px-4 rounded-full flex items-center gap-2"
+          >
+              <ArrowLeft size={18} />
+              Back to Admin
+          </button>
       </div>
 
       <div className="bg-white rounded-xl shadow-md p-6">

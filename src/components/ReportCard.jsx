@@ -48,17 +48,21 @@ const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) 
                 >
                     Directions
                 </button>
-                <button
-                    onClick={onMarkResolved}
-                    disabled={isResolved}
-                    className={`px-5 py-2 font-semibold rounded-lg shadow transition ${
-                        isResolved
-                            ? "bg-gray-400 text-white cursor-not-allowed"
-                            : "bg-yellow-500 text-white hover:bg-yellow-600"
-                    }`}
-                >
-                    {isResolved ? "Resolved" : "Mark Resolved"}
-                </button>
+                {isResolved ? (
+                    <button
+                        onClick={onMarkResolved}
+                        className="px-5 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow hover:bg-yellow-600 transition"
+                    >
+                        Mark Unresolved
+                    </button>
+                ) : (
+                    <button
+                        onClick={onMarkResolved}
+                        className="px-5 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow hover:bg-yellow-600 transition"
+                    >
+                        Mark Resolved
+                    </button>
+                )}
             </div>
         </div>
     );

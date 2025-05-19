@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   listenToReports,
   getEmergencyNamesByIndices,
+  updateIsResolved,
 } from "../apis/firebaseService";
 import ReportCard from "../components/ReportCard";
 import NavBar from "../components/NavBar";
@@ -11,10 +12,11 @@ import { useAuth } from "../apis/authProvider";
 const AdminConsole = () => {
   const { authUser, logout } = useAuth();
   const navigate = useNavigate();
+  const { tab } = useParams(); // Get the tab from the URL
   const [reports, setReports] = useState({});
   const [sortedReports, setSortedReports] = useState([]);
   const [sortBy, setSortBy] = useState("mostRecent");
-  const [activeTab, setActiveTab] = useState("allReports"); // Default tab
+  const [activeTab, setActiveTab] = useState(tab || "unresolvedReports");
 
   useEffect(() => {
     if (!authUser) {
@@ -37,7 +39,7 @@ const AdminConsole = () => {
           emergencyNames,
         };
       }
-
+      console.log("Updated reports:", updatedReports);
       setReports(updatedReports);
     });
   }, []);
@@ -63,23 +65,56 @@ const AdminConsole = () => {
     setSortedReports(sorted);
   }, [reports, sortBy]);
 
+  useEffect(() => {
+    setActiveTab(tab || "unresolvedReports");
+  }, [tab]);
+
   const handleSortChange = (e) => {
     setSortBy(e.target.value);
   };
 
   const handleViewDetails = (reportId) => {
-    navigate(`/admin/${reportId}`);
+    navigate(`/admin/report/${reportId}`);
   };
 
   const handleGetDirections = (location) => {
     console.log("Get directions to:", location);
   };
 
-  const handleMarkResolved = (reportId) => {
-    const updatedReports = { ...reports };
-    delete updatedReports[reportId];
-    setReports(updatedReports);
-    console.log("Removed report:", reportId);
+  const handleMarkResolved = async (reportId) => {
+    try {
+      await updateIsResolved(reportId, true);
+
+      setReports((prevReports) => ({
+        ...prevReports,
+        [reportId]: {
+          ...prevReports[reportId],
+          isResolved: true,
+        },
+      }));
+
+      console.log(`Report ${reportId} marked as resolved.`);
+    } catch (error) {
+      console.error("Error marking report as resolved:", error);
+    }
+  };
+
+  const handleMarkUnresolved = async (reportId) => {
+    try {
+        await updateIsResolved(reportId, false);
+
+        setReports((prevReports) => ({
+            ...prevReports,
+            [reportId]: {
+                ...prevReports[reportId],
+                isResolved: false,
+            },
+        }));
+
+        console.log(`Report ${reportId} marked as unresolved.`);
+    } catch (error) {
+        console.error("Error marking report as unresolved:", error);
+    }
   };
 
   const handleStaffLogout = async () => {
@@ -91,41 +126,47 @@ const AdminConsole = () => {
   };
 
   const renderContent = () => {
-    if (activeTab === "resolvedReports") {
-      // Filter resolved reports
-      const resolvedReports = Object.entries(reports).filter(
-        ([, report]) => report.isResolved
-      );
+      if (activeTab === "resolvedReports") {
+          const resolvedReports = Object.entries(reports).filter(
+              ([, report]) => report.isResolved
+          );
 
-      return (
-        <div>
-          {resolvedReports.map(([key, report]) => (
-            <ReportCard
-              key={key}
-              report={report}
-              onViewDetails={() => handleViewDetails(key)}
-              onGetDirections={() => handleGetDirections(report.location)}
-              onMarkResolved={() => handleMarkResolved(key)}
-            />
-          ))}
-        </div>
-      );
-    }
+          return (
+              <div>
+                  {resolvedReports.map(([key, report]) => (
+                      <ReportCard
+                          key={key}
+                          report={report}
+                          onViewDetails={() => handleViewDetails(key)}
+                          onGetDirections={() => handleGetDirections(report.location)}
+                          onMarkResolved={() => handleMarkUnresolved(key)}
+                      />
+                  ))}
+              </div>
+          );
+      }
 
-    // Default: All reports
-    return (
-      <div>
-        {sortedReports.map(([key, report]) => (
-          <ReportCard
-            key={key}
-            report={report}
-            onViewDetails={() => handleViewDetails(key)}
-            onGetDirections={() => handleGetDirections(report.location)}
-            onMarkResolved={() => handleMarkResolved(key)}
-          />
-        ))}
-      </div>
-    );
+      if (activeTab === "unresolvedReports") {
+          const unresolvedReports = Object.entries(reports).filter(
+              ([, report]) => !report.isResolved
+          );
+
+          return (
+              <div>
+                  {unresolvedReports.map(([key, report]) => (
+                      <ReportCard
+                          key={key}
+                          report={report}
+                          onViewDetails={() => handleViewDetails(key)}
+                          onGetDirections={() => handleGetDirections(report.location)}
+                          onMarkResolved={() => handleMarkResolved(key)}
+                      />
+                  ))}
+              </div>
+          );
+      }
+
+      return null; // Fallback in case no activeTab matches
   };
 
   return (
@@ -139,7 +180,7 @@ const AdminConsole = () => {
           { id: "resolvedReports", label: "Resolved Reports" },
         ]}
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => navigate(`/admin/${tab}`)}
       />
 
       {/* Logout Button */}
@@ -152,7 +193,6 @@ const AdminConsole = () => {
         </button>
       </div>
 
-      <p className="mb-6 text-gray-600">Below is the list of reports:</p>
 
       {/* Render Content Based on Active Tab */}
       {renderContent()}
