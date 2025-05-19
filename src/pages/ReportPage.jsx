@@ -82,7 +82,7 @@ const ReportPage = () => {
                                 href={resource.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block bg-white rounded-2xl shadow-md p-6 transition duration-300 transform hover:scale-105 hover:shadow-xl hover:bg-blue-50 cursor-pointer border border-transparent hover:border-blue-300"
+                                className="block bg-white rounded-2xl shadow-md p-6 transition duration-300 transform hover:scale-105 hover:shadow-xl hover:bg-blue-50 cursor-pointer border border-gray-300 hover:border-blue-400"
                             >
                                 <h2 className="text-lg font-bold text-blue-600 mb-2 group-hover:underline">
                                     {resource.title}
