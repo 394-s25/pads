@@ -2,24 +2,24 @@ const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) 
     const { location, time, notes, isResolved, emergencyNames } = report;
 
     return (
-        <div className="p-6 mb-6 bg-white border border-gray-200 rounded-2xl shadow-md">
+        <div className="p-6 mb-6 bg-gray-50 border border-gray-300 rounded-lg shadow-sm">
             {/* Header */}
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex justify-between items-center mb-4">
                 <div>
-                    <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">Reporter</h2>
-                    <p className="text-gray-600 flex items-center gap-1 text-base">📍 {location}</p>
+                    <h2 className="text-lg font-semibold text-gray-800">Report Details</h2>
+                    <p className="text-sm text-gray-500"> {location}</p>
                 </div>
-                <div className="text-right text-gray-600 text-sm space-y-1">
-                    <p className="flex items-center gap-1">📅 {new Date(time).toLocaleDateString()}</p>
-                    <p className="flex items-center gap-1">⏱ {new Date(time).toLocaleTimeString()}</p>
+                <div className="text-right text-sm text-gray-500">
+                    <p> {new Date(time).toLocaleDateString()}</p>
+                    <p> {new Date(time).toLocaleTimeString()}</p>
                 </div>
             </div>
 
             {/* Emergencies */}
             {emergencyNames && emergencyNames.length > 0 && (
-                <div className="p-4 mb-4 bg-red-50 border border-red-200 rounded-lg">
-                    <h3 className="text-lg font-semibold text-red-600 mb-2">Emergencies</h3>
-                    <ul className="list-disc list-inside text-gray-700">
+                <div className="mb-4">
+                    <h3 className="text-sm font-medium text-red-600">Emergencies</h3>
+                    <ul className="list-disc list-inside text-sm text-gray-700">
                         {emergencyNames.map((emergency, index) => (
                             <li key={index}>{emergency}</li>
                         ))}
@@ -28,41 +28,37 @@ const ReportCard = ({ report, onViewDetails, onGetDirections, onMarkResolved }) 
             )}
 
             {/* Notes */}
-            <div className="p-4 mb-4 bg-gray-100 border border-gray-200 rounded-lg">
-                <p className="text-gray-700 text-base flex items-start gap-2">
+            <div className="mb-4">
+                <h3 className="text-sm font-medium text-gray-800">Notes</h3>
+                <p className="text-sm text-gray-600">
                     {notes || "No additional notes provided."}
                 </p>
             </div>
 
             {/* Buttons */}
-            <div className="flex flex-wrap justify-start sm:justify-end gap-3">
+            <div className="flex justify-end gap-3">
                 <button
                     onClick={onViewDetails}
-                    className="px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition"
                 >
                     View Details
                 </button>
                 <button
                     onClick={onGetDirections}
-                    className="px-5 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition"
+                    className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition"
                 >
                     Directions
                 </button>
-                {isResolved ? (
-                    <button
-                        onClick={onMarkResolved}
-                        className="px-5 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow hover:bg-yellow-600 transition"
-                    >
-                        Mark Unresolved
-                    </button>
-                ) : (
-                    <button
-                        onClick={onMarkResolved}
-                        className="px-5 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow hover:bg-yellow-600 transition"
-                    >
-                        Mark Resolved
-                    </button>
-                )}
+                <button
+                    onClick={onMarkResolved}
+                    className={`px-4 py-2 text-sm font-medium rounded-md transition ${
+                        isResolved
+                            ? "bg-red-600 text-white hover:bg-red-700"
+                            : "bg-yellow-500 text-white hover:bg-yellow-600"
+                    }`}
+                >
+                    {isResolved ? "Mark Unresolved" : "Mark Resolved"}
+                </button>
             </div>
         </div>
     );
