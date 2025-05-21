@@ -27,6 +27,7 @@ const Landing = () => {
 
   return (
     <main className="h-screen bg-white flex flex-col items-center justify-center container mx-auto md:p-12">
+      <img src="padslogo-dark.png" className="h-25 mb-3"/>
       <h1 className="text-3xl font-extrabold font-['Manrope'] text-indigo-900 text-center">
         Welcome to Good Neighbor
       </h1>
