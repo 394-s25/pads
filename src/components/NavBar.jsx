@@ -1,8 +1,9 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../apis/authProvider";
 
 const NavBar = ({ tabs, activeTab, showLogout, logoSrc, title }) => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
 
@@ -26,7 +27,14 @@ const NavBar = ({ tabs, activeTab, showLogout, logoSrc, title }) => {
     <header className="bg-indigo-900 p-4 flex items-center justify-between shadow-md">
       <div className="flex justify-between items-center w-full">
         <div className="flex flex-col items-center text-white gap-2">
-          {logoSrc && <img src={`/${logoSrc}`} alt="Logo" className="w-32" />}
+          {logoSrc && (
+            <img
+              src={`/${logoSrc}`}
+              alt="Logo"
+              className="w-32"
+              onClick={() => navigate("/")}
+            />
+          )}
           <h1 className="text-lg font-bold">{title}</h1>
         </div>
         <div className="tabs flex">

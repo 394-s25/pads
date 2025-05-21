@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../apis/authProvider";
 import { getReport } from "../apis/adminFunctionality";
+import LocationMap from "../components/locationMap";
 import {
   MapPin,
   Calendar,
@@ -21,6 +22,7 @@ const ViewReport = () => {
   const { authUser } = useAuth();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
 
   useEffect(() => {
     if (!authUser) {
@@ -28,17 +30,26 @@ const ViewReport = () => {
       return;
     }
 
-  const fetchReport = async () => {
-    try {
-      const reportData = await getReport(reportId);
-      console.log("Fetched report data:", reportData);
-      setReport(reportData);
-    } catch (error) {
-      console.error("error fetching report:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchReport = async () => {
+      try {
+        const reportData = await getReport(reportId);
+        console.log("Fetched report data:", reportData);
+        setReport(reportData);
+
+        // Parse coordinates from the location string
+        if (reportData && reportData.location) {
+          const [latitude, longitude] = reportData.location.split(",");
+          setCoordinates({
+            lat: parseFloat(latitude),
+            lng: parseFloat(longitude),
+          });
+        }
+      } catch (error) {
+        console.error("error fetching report:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchReport();
   }, [reportId, authUser, navigate]);
@@ -63,15 +74,19 @@ const ViewReport = () => {
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold font-['Manrope']">View Report</h1>
-          <button
-              onClick={() =>
-                  navigate(report.isResolved ? "/admin/resolvedReports" : "/admin/unresolvedReports")
-              }
-              className="bg-indigo-200 hover:bg-indigo-300 text-indigo-900 font-['Manrope'] font-bold py-2 px-4 rounded-full flex items-center gap-2"
-          >
-              <ArrowLeft size={18} />
-              Back to Admin
-          </button>
+        <button
+          onClick={() =>
+            navigate(
+              report.isResolved
+                ? "/admin/resolvedReports"
+                : "/admin/unresolvedReports"
+            )
+          }
+          className="bg-indigo-200 hover:bg-indigo-300 text-indigo-900 font-['Manrope'] font-bold py-2 px-4 rounded-full flex items-center gap-2"
+        >
+          <ArrowLeft size={18} />
+          Back to Admin
+        </button>
       </div>
 
       <div className="bg-white rounded-xl shadow-md p-6">
@@ -91,6 +106,14 @@ const ViewReport = () => {
             <div className="flex items-center gap-2 text-gray-600 mb-2">
               <Clock size={18} className="text-indigo-600" />
               <span>{new Date(report.time).toLocaleTimeString()}</span>
+            </div>
+
+            {/* Map display */}
+            <div className="mt-4 h-64 rounded-lg overflow-hidden border border-gray-200">
+              <LocationMap
+                latitude={coordinates.lat}
+                longitude={coordinates.lng}
+              />
             </div>
           </div>
 
@@ -156,7 +179,7 @@ const ViewReport = () => {
         </div>
       </div>
       <button className="mt-8 w-full bg-white hover:bg-indigo-50 text-indigo-900 font-['Manrope'] font-bold py-4 px-4 rounded-full border-2 border-indigo-900">
-        {report.isResolved? "Mark as Unresolved" : "Mark as Resolved"}
+        {report.isResolved ? "Mark as Unresolved" : "Mark as Resolved"}
       </button>
     </div>
   );
