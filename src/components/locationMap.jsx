@@ -1,131 +1,3 @@
-// import React, { useState, useEffect, useRef } from "react";
-// import {
-//   APIProvider,
-//   ControlPosition,
-//   MapControl,
-//   Map,
-//   AdvancedMarker,
-//   Pin,
-//   useMap,
-//   useMapsLibrary,
-// } from "@vis.gl/react-google-maps";
-// import "./locationMap.css";
-
-// const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-
-// const LocationMap = ({ latitude, longitude }) => {
-//   const [selectedPlace, setSelectedPlace] = useState(null);
-
-//   // Northwestern coordinates for a default fallback value
-//   const defaultLatitude = 42.056431490213846;
-//   const defaultLongitude = -87.67533674079739;
-
-//   // Check if the values aren't null
-//   const currentLatitude = latitude || defaultLatitude;
-//   const currentLongitude = longitude || defaultLongitude;
-
-//   console.log(currentLatitude);
-//   console.log(currentLongitude);
-
-//   // Location Marker
-//   const LocationMarkers = ({ latitude, longitude }) => {
-//     return (
-//       <>
-//         <AdvancedMarker position={{ lat: latitude, lng: longitude }}>
-//           <Pin
-//             background={"#FF0000"}
-//             glyphColor={"#000"}
-//             borderColor={"#000"}
-//           />
-//         </AdvancedMarker>
-//       </>
-//     );
-//   };
-//   return (
-//     <APIProvider
-//       apiKey={GOOGLE_MAPS_API_KEY}
-//       onLoad={() => console.log("Maps API has loaded.")}
-//     >
-//       <Map
-//         defaultZoom={15}
-//         defaultCenter={{ lat: currentLatitude, lng: currentLongitude }}
-//         mapId={"696a2e1d90de87cc2a636ab2"}
-//         onCameraChanged={(ev) =>
-//           console.log(
-//             "Camera changed: ",
-//             ev.detail.center,
-//             "zoom:",
-//             ev.detail.zoom
-//           )
-//         }
-//       >
-//         <LocationMarkers
-//           latitude={currentLatitude}
-//           longitude={currentLongitude}
-//         ></LocationMarkers>
-//       </Map>
-//       <MapControl position={ControlPosition.TOP}>
-//         <div className="autocomplete-control">
-//           <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
-//         </div>
-//       </MapControl>
-//       <MapHandler place={selectedPlace}></MapHandler>
-//     </APIProvider>
-//   );
-// };
-
-// const MapHandler = ({ place, marker }) => {
-//   const map = useMap();
-
-//   useEffect(() => {
-//     if (!map || !place || !marker) return;
-//     if (place.geometry?.viewport) {
-//       map.fitBounds(place.geometry.viewport);
-//     }
-//     marker.position = place.geometry?.location;
-//   }, [map, place, marker]);
-
-//   return null;
-// };
-
-// const PlaceAutocomplete = ({ onPlaceSelect }) => {
-//   const [placeAutocomplete, setPlaceAutocomplete] = useState(null);
-//   const inputRef = useRef(null);
-//   const places = useMapsLibrary("places");
-
-//   useEffect(() => {
-//     if (!places || !inputRef.current || !globalThis.google) return;
-
-//     const options = {
-//       fields: ["geometry", "name", "formatted_address"],
-//     };
-
-//     const autocomplete = new globalThis.google.maps.places.Autocomplete(
-//       inputRef.current,
-//       options
-//     );
-//     setPlaceAutocomplete(autocomplete);
-//   }, [places]);
-
-//   useEffect(() => {
-//     if (!placeAutocomplete) return;
-
-//     const listener = placeAutocomplete.addListener("place_changed", () => {
-//       onPlaceSelect(placeAutocomplete.getPlace());
-//     });
-
-//     return () => listener.remove();
-//   }, [placeAutocomplete, onPlaceSelect]);
-
-//   return (
-//     <div className="autocomplete-container">
-//       <input ref={inputRef}></input>
-//     </div>
-//   );
-// };
-
-// export default LocationMap;
-
 import React, { useState, useEffect, useRef } from "react";
 import {
   APIProvider,
@@ -141,12 +13,58 @@ import "./locationMap.css";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
+const HeatmapOverlay = ({ useHeatMap }) => {
+  const map = useMap();
+  const [heatmap, setHeatmap] = useState(null);
+
+  useEffect(() => {
+    if (!map || !window.google || !google.maps.visualization) return;
+
+    let heatmapLayer = null;
+
+    if (useHeatMap) {
+      heatmapLayer = new google.maps.visualization.HeatmapLayer({
+        data: getPoints(),
+        map: map,
+      });
+      setHeatmap(heatmapLayer);
+    }
+
+    return () => {
+      if (heatmapLayer) {
+        heatmapLayer.setMap(null);
+      }
+    };
+  }, [map, useHeatMap]);
+
+  function getPoints() {
+    return [
+      new google.maps.LatLng(42.0526711, -87.674528),
+      new google.maps.LatLng(42.05215, -87.675),
+      new google.maps.LatLng(42.0529, -87.6739),
+      new google.maps.LatLng(42.0533, -87.6748),
+      new google.maps.LatLng(42.053, -87.6735),
+      new google.maps.LatLng(42.0523, -87.673),
+      new google.maps.LatLng(42.0518, -87.6737),
+      new google.maps.LatLng(42.0516, -87.6746),
+      new google.maps.LatLng(42.0519, -87.6753),
+      new google.maps.LatLng(42.0524, -87.6758),
+      new google.maps.LatLng(42.053, -87.6754),
+      new google.maps.LatLng(42.0534, -87.674),
+      new google.maps.LatLng(42.0532, -87.6732),
+      new google.maps.LatLng(42.0526, -87.6729),
+    ];
+  }
+};
+
 const LocationMap = ({ latitude, longitude }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [markerRef, marker] = useAdvancedMarkerRef();
+  const [useHeatMap, setUseHeatMap] = useState(false);
   return (
     <APIProvider
       apiKey={API_KEY}
+      libraries={["visualization"]}
       solutionChannel="GMP_devsite_samples_v3_rgmautocomplete"
     >
       <Map
@@ -160,10 +78,16 @@ const LocationMap = ({ latitude, longitude }) => {
           ref={markerRef}
           position={{ lat: latitude, lng: longitude }}
         />
+        <HeatmapOverlay useHeatMap={useHeatMap}></HeatmapOverlay>
       </Map>
       <MapControl position={ControlPosition.TOP}>
         <div className="autocomplete-control">
           <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
+        </div>
+        <div className="heatmap-control">
+          <button onClick={() => setUseHeatMap(!useHeatMap)}>
+            Show heatmap
+          </button>
         </div>
       </MapControl>
       <MapHandler place={selectedPlace} marker={marker} />
