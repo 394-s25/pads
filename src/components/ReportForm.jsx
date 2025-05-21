@@ -3,7 +3,9 @@ import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import Location from "./location";
 import { getAllEmergencyNames, getIndexByEmergencyName } from "../apis/firebaseService";
 import { v4 as uuid } from "uuid";
-
+const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+import { reverseGeocode } from "../utils/reverseGeocode";
+import PlacesAutocomplete from "./PlacesAutocomplete";
 // location: '', // get current location from map
 // time: '', // enter manually with a time input box or select use current time
 // numPeople: 0, // counter with a [- value +], doesn't go below 0, value can also be changed to a number by typing it
@@ -104,29 +106,40 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
         }
     }, [useCurrentTime]);
     useEffect(() => {
-        if (useCurrentLocation && "geolocation" in navigator) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              handleChange({
+    if (useCurrentLocation && "geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+        async (position) => {
+            const { latitude, longitude } = position.coords;
+            try {
+            const address = await reverseGeocode(latitude, longitude, API_KEY);
+            handleChange({
                 target: {
-                  name: 'location',
-                  value: `${latitude}, ${longitude}`
-                }
-              });
-            },
-            (error) => {
-              console.error("Failed to get location:", error);
-              handleChange({
+                name: "location",
+                value: address,
+                },
+            });
+            } catch (error) {
+            console.error("Reverse geocoding failed:", error);
+            handleChange({
                 target: {
-                  name: 'location',
-                  value: "Location unavailable"
-                }
-              });
+                name: "location",
+                value: `${latitude}, ${longitude}`,
+                },
+            });
             }
-          );
+        },
+        (error) => {
+            console.error("Failed to get location:", error);
+            handleChange({
+            target: {
+                name: "location",
+                value: "Location unavailable",
+            },
+            });
         }
-      }, [useCurrentLocation]);
+        );
+    }
+    }, [useCurrentLocation]);
       
     return (
                 <section className="bg-white p-6 rounded-xl shadow-lg">
@@ -138,13 +151,22 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
                             <label className="block text-gray-700 font-medium mb-2">
                                 Location:*
                                 <div className="flex items-center mt-1">
-                                    <input 
-                                        name="location" 
-                                        value={formData.location} 
-                                        onChange={handleChange} 
-                                        disabled={useCurrentLocation} 
-                                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                                    />
+                                {!useCurrentLocation ? (
+                                // updated by irving
+                                <PlacesAutocomplete
+                                    value={formData.location}
+                                    onChange={handleChange}
+                                    disabled={false}
+                                />
+                                ) : (
+                                <input
+                                    name="location"
+                                    value={formData.location}
+                                    onChange={handleChange}
+                                    disabled={true}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                                />
+                                )}
                                 </div>
                                 <div className="flex items-center mt-2">
                                     <input 

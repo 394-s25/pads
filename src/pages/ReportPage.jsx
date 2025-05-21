@@ -31,12 +31,28 @@ const ReportPage = () => {
         .catch((err) => console.error("Error loading resources:", err));
     }
   }, [section]);
+      /*
+    * original code
+    *
+    */
+    // const handleChange = (event) => {
+    //     const { name, value } = event.target;
+    //     setFormData((prev) => ({...prev, [name]: value}));
+    //     console.log(formData);
+    // };
+    const handleChange = (event) => {
+        
+        const name = event.target?.name;
+        const value = event.target?.value;
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    console.log(formData);
-  };
+        if (!name) return;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }));
+        console.log("Changed:", name, value);
+    };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
