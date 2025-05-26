@@ -4,6 +4,7 @@ import Location from "../components/location";
 import { writeReport } from "../apis/firebaseService";
 import ReportForm from "../components/ReportForm";
 import ReportLayout from "../components/ReportLayout";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 const ReportPage = () => {
   const { section } = useParams(); // 'report', 'map', or 'resources'
@@ -19,6 +20,7 @@ const ReportPage = () => {
     email: "",
     appearance: "",
     assignedOrg: "PADS Lake County",
+    mediaUrls: [],
   });
   const [submissionStatus, setSubmissionStatus] = useState("");
   const reportFormRef = useRef(null);
@@ -40,27 +42,41 @@ const ReportPage = () => {
     //     setFormData((prev) => ({...prev, [name]: value}));
     //     console.log(formData);
     // };
-    const handleChange = (event) => {
-        
-        const name = event.target?.name;
-        const value = event.target?.value;
+  const handleChange = (event) => {
+      
+      const name = event.target?.name;
+      const value = event.target?.value;
 
-        if (!name) return;
+      if (!name) return;
 
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
-        console.log("Changed:", name, value);
+      setFormData((prev) => ({
+          ...prev,
+          [name]: value
+      }));
+      console.log("Changed:", name, value);
+  };
+
+  const handleSubmit = async (formData, selectedFiles) => {
+    const storage = getStorage();
+    const uploadPromises = selectedFiles.map(async (file) => {
+        const uniqueName = `${Date.now()}-${file.name}`;
+        const storageRef = ref(storage, uniqueName);
+        console.log("uploading file: ", uniqueName);
+        await uploadBytes(storageRef, file).then((snapshot) => {
+            console.log(`Uploaded file ${uniqueName}!`);
+        });
+        return await getDownloadURL(storageRef);
+    })
+
+    const urls = await Promise.all(uploadPromises);
+    const fullFormData = {
+      ...formData,
+      mediaUrls: [...(formData.mediaUrls || []), ...urls],
     };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log("Submitted report:", formData);
-
     try {
-      const reportId = await writeReport(...Object.values(formData));
-
+      const reportId = await writeReport(...Object.values(fullFormData));
+  
       setFormData({
         location: "",
         time: "",
@@ -72,6 +88,7 @@ const ReportPage = () => {
         email: "",
         appearance: "",
         assignedOrg: "PADS Lake County",
+        mediaUrls: [],
       });
 
       if (reportFormRef.current?.resetToggles) {

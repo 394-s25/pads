@@ -14,7 +14,7 @@ import { ref, push, onValue, get, set, update} from "firebase/database"; // Impo
     * @param {string} appearance - Description of the appearance of individuals involved
     * @param {string} assignedOrg - Organization assigned to handle the report
 */
-export async function writeReport(location, time, numPeople, emergencies, isResolved, notes, phoneNumber, email, appearance, assignedOrg) {
+export async function writeReport(location, time, numPeople, emergencies, isResolved, notes, phoneNumber, email, appearance, assignedOrg, mediaUrls) {
     try {
         const reportRef = ref(database, 'report');
 
@@ -33,7 +33,8 @@ export async function writeReport(location, time, numPeople, emergencies, isReso
             email,
             appearance,
             assignedOrg,
-            id: reportId // add id for searching
+            id: reportId, // add id for searching
+            mediaUrls: mediaUrls || []
         };
 
         await set(newReportRef, reportData); // use set to write full data

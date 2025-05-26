@@ -18,14 +18,15 @@ import PlacesAutocomplete from "./PlacesAutocomplete";
 // assignedOrg: 'PADS Lake County' // dropdown with only one option as of now
 
 //const ReportForm = ({ formData, handleChange, handleSubmit, submissionStatus }) => { ---
-const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionStatus }, ref) => {    
+const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionStatus }, forwardedRef) => {    
     const [useCurrentLocation, setUseCurrentLocation] = useState(false);
     const [useCurrentTime, setUseCurrentTime] = useState(false);
     const [time, setTime] = useState('');
     const [allEmergencies, setAllEmergencies] = useState([]); // strings
     const [emergencies, setEmergencies] = useState([]); // indices
+    const [selectedFiles, setSelectedFiles] = useState([]);
 
-    useImperativeHandle(ref, () => ({
+    useImperativeHandle(forwardedRef, () => ({
         resetToggles() {
             setUseCurrentLocation(false);
             setUseCurrentTime(false);
@@ -146,7 +147,10 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
                     <h2 className="text-2xl font-semibold text-gray-800 mb-2">Create a New Report</h2>
                     <p className="text-gray-600 mb-6">Please fill out the form below to submit a new report.</p>
 
-                    <form onSubmit={handleSubmit} className="grid gap-6">
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSubmit(formData, selectedFiles);
+                    }} className="grid gap-6">
                         <div className="form-group">
                             <label className="block text-gray-700 font-medium mb-2">
                                 Location:*
@@ -287,6 +291,25 @@ const ReportFormComponent = ({ formData, handleChange, handleSubmit, submissionS
                                     className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                                 />
                             </label>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="block text-gray-700 font-medium mb-2">
+                                Upload images or videos:
+                                <br />
+                                <input 
+                                    type="file"
+                                    accept="image/*, video/*"
+                                    multiple
+                                    name="media"
+                                    onChange={(e) => {
+                                        setSelectedFiles(Array.from(e.target.files));
+                                    }}
+                                    className="mt-1 p-2 border border-gray-300 rounded-lg hover:bg-gray-100 active:bg-gray-300" 
+                                />
+
+                            </label>
+
                         </div>
 
                         <div className="form-group">
