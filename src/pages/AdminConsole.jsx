@@ -255,7 +255,6 @@ const AdminConsole = () => {
 
   return (
     <div>
-      {/* NavBar */}
       <NavBar
         logoSrc="padslogo.png"
         title="Admin Console"
@@ -348,7 +347,6 @@ const AdminConsole = () => {
           </div>
         </div>
 
-        {/* Sort Buttons */}
         <div className="flex justify-end gap-4 mt-4">
           <button
             onClick={() => handleSortChange("mostRecent")}
@@ -372,7 +370,6 @@ const AdminConsole = () => {
           </button>
         </div>
 
-        {/* Render Content Based on Active Tab */}
         {renderContent()}
       </div>
     </div>
