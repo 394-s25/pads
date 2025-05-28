@@ -5,10 +5,13 @@ import { writeReport } from "../apis/firebaseService";
 import ReportForm from "../components/ReportForm";
 import ReportLayout from "../components/ReportLayout";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { Clipboard } from 'lucide-react';
 
 const ReportPage = () => {
   const { section } = useParams(); // 'report', 'map', or 'resources'
+  const [copied, setCopied] = useState(false);
   const [resources, setResources] = useState([]);
+  const [reportId, setReportId] = useState("");
   const [formData, setFormData] = useState({
     location: "",
     time: "",
@@ -95,9 +98,8 @@ const ReportPage = () => {
         reportFormRef.current.resetToggles();
       }
 
-      setSubmissionStatus(
-        `Report successfully submitted. Your report ID is: ${reportId}`
-      );
+      setReportId(reportId);
+      setSubmissionStatus("Report successfully submitted.");
     } catch (error) {
       console.error("Error submitting report:", error);
       setSubmissionStatus(
@@ -132,19 +134,46 @@ const ReportPage = () => {
             ))}
           </div>
         );
-      case "report":
-      default:
-        return (
-          <ReportForm
-            ref={reportFormRef}
-            formData={formData}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-            submissionStatus={submissionStatus}
-          />
-        );
-    }
-  };
+        case "report":
+          default:
+            return (
+              <>
+                <ReportForm
+                  ref={reportFormRef}
+                  formData={formData}
+                  handleChange={handleChange}
+                  handleSubmit={handleSubmit}
+                  submissionStatus={submissionStatus}
+                />
+                
+                {submissionStatus && (
+                  <div className="mt-6 p-4 bg-green-50 border border-green-300 rounded-lg text-green-700 font-medium space-y-2">
+                    <p>{submissionStatus}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span>Your report ID is:</span>
+                      <span className="bg-blue-100 px-2 py-1 rounded font-mono">{reportId}</span>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(reportId);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }}
+                        className="flex items-center gap-1 text-green-600 hover:text-indigo-800 transition"
+                        title="Copy to clipboard"
+                      >
+                        <Clipboard className="w-5 h-5" />
+                        <span className="text-sm font-normal">Copy ID</span>
+                      </button>
+                      {copied && (
+                        <span className="text-sm text-green-600">Copied!</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+      }
+    };         
 
   return <ReportLayout>{renderContent()}</ReportLayout>;
 };

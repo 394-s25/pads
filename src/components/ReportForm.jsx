@@ -402,11 +402,6 @@ const ReportFormComponent = (
             Submit Report
           </button>
         </div>
-        {submissionStatus && (
-          <p className="mt-4 text-green-700 font-semibold">
-            {submissionStatus}
-          </p>
-        )}
       </form>
     </section>
   );
