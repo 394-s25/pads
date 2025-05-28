@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../apis/authProvider";
 import { getReport } from "../apis/adminFunctionality";
 import { geocode } from "../utils/geoCoding";
-import { updateIsResolved } from "../apis/firebaseService";
+import { updateIsResolved, updateNotes } from "../apis/firebaseService";
 import LocationMap from "../components/locationMap";
 import {
   MapPin,
@@ -29,6 +29,8 @@ const ViewReport = () => {
   const [resolved, setResolved] = useState(null);
   const [loading, setLoading] = useState(true);
   const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
+  const [note, setNote] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (!authUser) {
@@ -68,6 +70,17 @@ const ViewReport = () => {
     }
   };
 
+  const handleLeaveNote = async () => {
+    try {
+      await updateNotes(reportId, note);
+      alert("Note successfully updated!");
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error leaving a note:", error);
+      alert("Failed to update the note.");
+    }
+  };
+
   if (loading) {
     return (
       <div className="p-8 flex items-center justify-center">
@@ -97,12 +110,6 @@ const ViewReport = () => {
         >
           <ArrowLeft size={18} />
           Back to Console
-        </button>
-        <button
-          className="bg-primary-blue hover:bg-secondary-blue text-white font-bold py-2 px-4 rounded-full flex items-center"
-          onClick={handleStatusChange}
-        >
-          {resolved ? "Mark as Unresolved" : "Mark as Resolved"}
         </button>
       </div>
 
@@ -213,6 +220,50 @@ const ViewReport = () => {
           )}
         </div>
       </div>
+
+      {/* Buttons at the bottom */}
+      <div className="flex justify-center gap-4 mt-8">
+        <button
+          className="bg-primary-blue hover:bg-secondary-blue text-white font-bold py-2 px-4 rounded-full flex items-center"
+          onClick={handleStatusChange}
+        >
+          {resolved ? "Mark as Unresolved" : "Mark as Resolved"}
+        </button>
+        <button
+          className="bg-primary-blue hover:bg-secondary-blue text-white font-bold py-2 px-4 rounded-full flex items-center"
+          onClick={() => setShowModal(true)} // Open the modal
+        >
+          Leave a Note to the Reporter
+        </button>
+      </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-bold mb-4">Leave a Note</h2>
+            <textarea
+              placeholder="Enter your note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="w-full h-32 px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 mb-4 resize-none"
+            />
+            <div className="flex justify-end gap-4">
+              <button
+                className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-full"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
+                onClick={handleLeaveNote}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

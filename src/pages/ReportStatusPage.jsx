@@ -5,15 +5,18 @@ import ReportLayout from "../components/ReportLayout";
 const ReportStatusPage = () => {
   const [inputId, setInputId] = useState("");
   const [status, setStatus] = useState(null);
+  const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
 
   const handleCheck = async () => {
     try {
       const data = await getReportById(inputId.trim());
       setStatus(data?.isResolved ? "Resolved" : "Not resolved");
+      setNotes(data?.notes || "No notes available.");
       setError("");
     } catch {
       setStatus(null);
+      setNotes("");
       setError("Report not found.");
     }
   };
@@ -36,6 +39,7 @@ const ReportStatusPage = () => {
         Check Status
       </button>
       {status && <p className="mt-4 text-green-700 font-semibold">Status: {status}</p>}
+      {notes && <p className="mt-4 text-gray-700">Notes: {notes}</p>}
       {error && <p className="mt-4 text-red-500">{error}</p>}
     </ReportLayout>
   );

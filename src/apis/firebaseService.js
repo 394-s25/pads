@@ -163,3 +163,34 @@ export async function updateIsResolved(reportId, isResolved) {
         throw error;
     }
 }
+
+export async function updateNotes(reportId, newNote) {
+    try {
+        const reportRef = ref(database, `report/${reportId}`);
+        
+        // Update the notes field in the database
+        await update(reportRef, { notes: newNote });
+        
+        console.log(`Successfully updated notes for report ID: ${reportId}`);
+    } catch (error) {
+        console.error("Error updating notes:", error);
+        throw error;
+    }
+}
+
+export async function getNotes(reportId) {
+    try {
+        const reportRef = ref(database, `report/${reportId}`);
+        const snapshot = await get(reportRef);
+
+        if (!snapshot.exists()) {
+            throw new Error(`No report found with ID: ${reportId}`);
+        }
+
+        const reportData = snapshot.val();
+        return reportData.notes || "";
+    } catch (error) {
+        console.error("Error retrieving notes:", error);
+        throw error;
+    }
+}
