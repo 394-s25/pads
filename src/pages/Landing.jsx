@@ -47,7 +47,7 @@ const Landing = () => {
           </p>
           <button
             onClick={handleReport}
-            className="bg-primary-blue hover:bg-primary-blue text-white font-bold py-3 px-8 rounded-full flex items-center"
+            className="bg-primary-blue hover:bg-primary-blue/90 transition duration-200 text-white font-bold py-3 px-8 rounded-full flex items-center"
           >
             <ClipboardList size={20} className="mr-2" />
             Notify
@@ -63,7 +63,7 @@ const Landing = () => {
           </p>
           <button
             onClick={handleStaffLogin}
-            className="bg-white hover:text-secondary-blue text-primary-blue font-bold py-3 px-8 rounded-full flex items-center text-sm"
+            className="bg-white hover:bg-slate-100 hover:text-secondary-blue transition duration-200 text-primary-blue font-bold py-3 px-8 rounded-full flex items-center text-sm"
           >
             <LogIn size={14} className="mr-1" />
             Login
