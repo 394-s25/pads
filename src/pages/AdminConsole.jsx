@@ -18,12 +18,12 @@ const AdminConsole = () => {
   const [sortBy, setSortBy] = useState("mostRecent");
   const [activeTab, setActiveTab] = useState(tab || "unresolvedReports");
   const [filters, setFilters] = useState({
-      startDate: "",
-      endDate: "",
-      location: "",
-      notes: "",
-      emergency: "",
-    });
+    startDate: "",
+    endDate: "",
+    location: "",
+    notes: "",
+    emergency: "",
+  });
   const [emergencyOptions, setEmergencyOptions] = useState([]);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const AdminConsole = () => {
         };
       }
       console.log("Updated reports:", updatedReports);
-      
+
       setReports(updatedReports);
     });
   }, []);
@@ -102,7 +102,7 @@ const AdminConsole = () => {
     setActiveTab(tab || "unresolvedReports");
   }, [tab]);
 
-    useEffect(() => {
+  useEffect(() => {
     const filteredReports = Object.entries(reports).filter(([key, report]) => {
       const { startDate, endDate, location, notes, emergency } = filters;
 
@@ -115,7 +115,10 @@ const AdminConsole = () => {
       }
 
       // Filter by location
-      if (location && !report.location.toLowerCase().includes(location.toLowerCase())) {
+      if (
+        location &&
+        !report.location.toLowerCase().includes(location.toLowerCase())
+      ) {
         return false;
       }
 
@@ -127,8 +130,7 @@ const AdminConsole = () => {
       // Filter by emergency
       if (
         emergency &&
-        (!report.emergencyNames ||
-          !report.emergencyNames.includes(emergency))
+        (!report.emergencyNames || !report.emergencyNames.includes(emergency))
       ) {
         return false;
       }
@@ -153,7 +155,7 @@ const AdminConsole = () => {
 
     setSortedReports(sorted);
   }, [reports, sortBy, filters]);
-  
+
   const handleSortChange = (sortOption) => {
     setSortBy(sortOption);
   };
@@ -169,9 +171,9 @@ const AdminConsole = () => {
     navigate(`/admin/report/${reportId}`);
   };
 
-  const handleGetDirections = (location) => {
-    console.log("Get directions to:", location);
-  };
+  // const handleGetDirections = (location) => {
+  //   console.log("Get directions to:", location);
+  // };
 
   const handleMarkResolved = async (reportId) => {
     try {
@@ -242,7 +244,8 @@ const AdminConsole = () => {
               key={key}
               report={report}
               onViewDetails={() => handleViewDetails(key)}
-              onGetDirections={() => handleGetDirections(report.location)}
+              // removed this since we're not using it rn
+              // onGetDirections={() => handleGetDirections(report.location)}
               onMarkResolved={() => handleMarkResolved(key)}
             />
           ))}
@@ -266,13 +269,18 @@ const AdminConsole = () => {
         activeTab={activeTab}
         setActiveTab={(tab) => navigate(`/admin/${tab}`)}
       />
-      
+
       <div className="m-8">
-        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Filter Reports</h2>
+        <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            Filter Reports
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="startDate"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Start Date
               </label>
               <input
@@ -285,7 +293,10 @@ const AdminConsole = () => {
               />
             </div>
             <div>
-              <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="endDate"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 End Date
               </label>
               <input
@@ -298,7 +309,10 @@ const AdminConsole = () => {
               />
             </div>
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="location"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Location
               </label>
               <input
@@ -312,7 +326,10 @@ const AdminConsole = () => {
               />
             </div>
             <div>
-              <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="notes"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Notes
               </label>
               <input
@@ -326,7 +343,10 @@ const AdminConsole = () => {
               />
             </div>
             <div>
-              <label htmlFor="emergency" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="emergency"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Emergency
               </label>
               <select
@@ -347,12 +367,12 @@ const AdminConsole = () => {
           </div>
         </div>
 
-        <div className="flex justify-end gap-4 mt-4">
+        <div className="flex justify-end gap-4 my-4">
           <button
             onClick={() => handleSortChange("mostRecent")}
-            className={`px-4 py-2 text-sm font-medium rounded-md ${
+            className={`px-4 py-2 text-sm font-medium rounded-full ${
               sortBy === "mostRecent"
-                ? "bg-indigo-600 text-white"
+                ? "bg-secondary-blue text-white"
                 : "bg-gray-200 text-gray-800 hover:bg-gray-300"
             }`}
           >
@@ -360,9 +380,9 @@ const AdminConsole = () => {
           </button>
           <button
             onClick={() => handleSortChange("emergencies")}
-            className={`px-4 py-2 text-sm font-medium rounded-md ${
+            className={`px-4 py-2 text-sm font-medium rounded-full ${
               sortBy === "emergencies"
-                ? "bg-indigo-600 text-white"
+                ? "bg-secondary-blue text-white"
                 : "bg-gray-200 text-gray-800 hover:bg-gray-300"
             }`}
           >

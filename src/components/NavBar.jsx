@@ -24,18 +24,18 @@ const NavBar = ({ tabs, activeTab, showLogout, logoSrc, title }) => {
   };
 
   return (
-    <header className="bg-indigo-900 p-4 flex items-center justify-between shadow-md">
+    <header className="bg-primary-blue p-4 flex items-center justify-between shadow-md">
       <div className="flex justify-between items-center w-full">
         <div className="flex flex-col items-center text-white gap-2">
           {logoSrc && (
             <img
               src={`/${logoSrc}`}
               alt="Logo"
-              className="w-32"
+              className="w-28 cursor-pointer"
               onClick={() => navigate("/")}
             />
           )}
-          <h1 className="text-lg font-bold">{title}</h1>
+          {/* <h1 className="font-extrabold">{title}</h1> */}
         </div>
         <div className="tabs flex">
           {tabs.map((tab) => (
@@ -45,7 +45,7 @@ const NavBar = ({ tabs, activeTab, showLogout, logoSrc, title }) => {
               className={`ml-4 px-4 py-2 text-base ${
                 location.pathname === tabRouteMap[tab.id]
                   ? "border-b-2 border-white text-white font-bold"
-                  : "text-white hover:text-indigo-200"
+                  : "text-white hover:text-tertiary-blue"
               }`}
             >
               {tab.label}
