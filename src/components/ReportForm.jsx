@@ -31,6 +31,7 @@ const ReportFormComponent = (
   const [allEmergencies, setAllEmergencies] = useState([]); // strings
   const [emergencies, setEmergencies] = useState([]); // indices
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previews, setPreviews] = useState(null);
 
   useImperativeHandle(forwardedRef, () => ({
     resetToggles() {
@@ -96,6 +97,15 @@ const ReportFormComponent = (
         },
       });
     }
+  };
+
+  const mediaHandler = (e) => {
+    setSelectedFiles(Array.from(e.target.files));
+    setPreviews(
+      Array.from(e.target.files).map((file) => {
+        return URL.createObjectURL(file);
+      })
+    );
   };
 
   useEffect(() => {
@@ -325,11 +335,22 @@ const ReportFormComponent = (
               accept="image/*, video/*"
               multiple
               name="media"
-              onChange={(e) => {
-                setSelectedFiles(Array.from(e.target.files));
-              }}
+              onChange={mediaHandler}
               className="mt-1 p-2 border border-gray-300 rounded-lg hover:bg-gray-100 active:bg-gray-300"
             />
+            {previews && previews.length > 0 && (
+              <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                {previews.map((preview, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={preview}
+                      alt={`preview ${index + 1}`}
+                      className="w-full h-32 object-cover rounded-lg"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </label>
         </div>
 
