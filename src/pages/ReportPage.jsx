@@ -76,6 +76,7 @@ const ReportPage = () => {
       ...formData,
       mediaUrls: [...(formData.mediaUrls || []), ...urls],
     };
+    console.log("Final location string submitted:", fullFormData.location);
 
     try {
       const reportId = await writeReport(...Object.values(fullFormData));
