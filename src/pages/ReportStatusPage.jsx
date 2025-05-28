@@ -12,7 +12,7 @@ const ReportStatusPage = () => {
     try {
       const data = await getReportById(inputId.trim());
       setStatus(data?.isResolved ? "Resolved" : "Not resolved");
-      setNotes(data?.notes || "No notes available.");
+      setNotes(data?.AdminNotes || "No notes available.");
       setError("");
     } catch {
       setStatus(null);

@@ -164,12 +164,12 @@ export async function updateIsResolved(reportId, isResolved) {
     }
 }
 
-export async function updateNotes(reportId, newNote) {
+export async function updateAdminNotes(reportId, newNote) {
     try {
         const reportRef = ref(database, `report/${reportId}`);
         
         // Update the notes field in the database
-        await update(reportRef, { notes: newNote });
+        await update(reportRef, { AdminNotes: newNote });
         
         console.log(`Successfully updated notes for report ID: ${reportId}`);
     } catch (error) {
@@ -178,7 +178,7 @@ export async function updateNotes(reportId, newNote) {
     }
 }
 
-export async function getNotes(reportId) {
+export async function getAdminNotes(reportId) {
     try {
         const reportRef = ref(database, `report/${reportId}`);
         const snapshot = await get(reportRef);
@@ -188,7 +188,7 @@ export async function getNotes(reportId) {
         }
 
         const reportData = snapshot.val();
-        return reportData.notes || "";
+        return reportData.AdminNotes || "";
     } catch (error) {
         console.error("Error retrieving notes:", error);
         throw error;

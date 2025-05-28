@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../apis/authProvider";
 import { getReport } from "../apis/adminFunctionality";
 import { geocode } from "../utils/geoCoding";
-import { updateIsResolved, updateNotes } from "../apis/firebaseService";
+import { updateIsResolved, updateAdminNotes } from "../apis/firebaseService";
 import LocationMap from "../components/locationMap";
 import {
   MapPin,
@@ -72,7 +72,7 @@ const ViewReport = () => {
 
   const handleLeaveNote = async () => {
     try {
-      await updateNotes(reportId, note);
+      await updateAdminNotes(reportId, note);
       alert("Note successfully updated!");
       setShowModal(false);
     } catch (error) {
