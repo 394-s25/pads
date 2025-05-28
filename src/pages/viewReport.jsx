@@ -17,7 +17,7 @@ import {
   Phone,
   Mail,
   ArrowLeft,
-  User,
+  Camera,
 } from "lucide-react";
 import { set } from "firebase/database";
 
@@ -158,6 +158,26 @@ const ViewReport = () => {
                     </li>
                   ))}
                 </ul>
+              </div>
+            </div>
+          )}
+
+          {report.mediaUrls && report.mediaUrls.length > 0 && (
+            <div className="md:col-span-2">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <Camera size={20} className="text-secondary-blue" />
+                Media
+              </h2>
+              <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                {report.mediaUrls.map((url, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={url}
+                      alt={`media ${index + 1}`}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           )}
