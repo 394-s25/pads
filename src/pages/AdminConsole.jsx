@@ -106,11 +106,27 @@ const AdminConsole = () => {
     const filteredReports = Object.entries(reports).filter(([key, report]) => {
       const { startDate, endDate, location, notes, emergency } = filters;
 
+      console.log("Start Date:", startDate);
+      console.log("End Date:", endDate);
+      console.log("Report Time:", report.time);
+
+      const reportDate = new Date(report.time).getTime();
+      const startDateObj = startDate ? new Date(startDate).getTime() : null;
+      const endDateObj = endDate
+        ? new Date(new Date(endDate).toISOString().split("T")[0] + "T23:59:59.999Z").getTime()
+        : null;
+
+      console.log("Parsed Report Date:", reportDate);
+      console.log("Parsed Start Date:", startDateObj);
+      console.log("Parsed End Date:", endDateObj);
+
       // Filter by date range
-      if (startDate && new Date(report.time) < new Date(startDate)) {
+      if (startDateObj && reportDate < startDateObj) {
+        console.log(`Excluding report ${key} - Before Start Date`);
         return false;
       }
-      if (endDate && new Date(report.time) > new Date(endDate)) {
+      if (endDateObj && reportDate > endDateObj) {
+        console.log(`Excluding report ${key} - After End Date`);
         return false;
       }
 
@@ -137,6 +153,8 @@ const AdminConsole = () => {
 
       return true;
     });
+
+    console.log("Filtered Reports:", filteredReports);
 
     const sorted = filteredReports.sort(([keyA, reportA], [keyB, reportB]) => {
       const emergenciesA = reportA.emergencies || [];
@@ -170,10 +188,6 @@ const AdminConsole = () => {
   const handleViewDetails = (reportId) => {
     navigate(`/admin/report/${reportId}`);
   };
-
-  // const handleGetDirections = (location) => {
-  //   console.log("Get directions to:", location);
-  // };
 
   const handleMarkResolved = async (reportId) => {
     try {
@@ -244,8 +258,6 @@ const AdminConsole = () => {
               key={key}
               report={report}
               onViewDetails={() => handleViewDetails(key)}
-              // removed this since we're not using it rn
-              // onGetDirections={() => handleGetDirections(report.location)}
               onMarkResolved={() => handleMarkResolved(key)}
             />
           ))}
