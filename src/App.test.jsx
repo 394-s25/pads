@@ -5,6 +5,6 @@ import App from "./App";
 describe("landing tests", () => {
   test("page should render heading", () => {
     render(<App />);
-    expect(screen.getByText("Welcome to Good Neighbor")).toBeDefined();
+    expect(screen.getByText("NOOOOOOO")).toBeDefined();
   });
 });
