@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
-import Location from "./location";
+import Location from "./Location";
 import {
   getAllEmergencyNames,
   getIndexByEmergencyName,
