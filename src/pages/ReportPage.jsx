@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import Location from "../components/location";
+import Location from "../components/Location";
 import { writeReport } from "../apis/firebaseService";
 import ReportForm from "../components/ReportForm";
 import ReportLayout from "../components/ReportLayout";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { Clipboard } from 'lucide-react';
+import { Clipboard } from "lucide-react";
 
 const ReportPage = () => {
   const { section } = useParams(); // 'report', 'map', or 'resources'
@@ -36,40 +36,39 @@ const ReportPage = () => {
         .catch((err) => console.error("Error loading resources:", err));
     }
   }, [section]);
-      /*
-    * original code
-    *
-    */
-    // const handleChange = (event) => {
-    //     const { name, value } = event.target;
-    //     setFormData((prev) => ({...prev, [name]: value}));
-    //     console.log(formData);
-    // };
+  /*
+   * original code
+   *
+   */
+  // const handleChange = (event) => {
+  //     const { name, value } = event.target;
+  //     setFormData((prev) => ({...prev, [name]: value}));
+  //     console.log(formData);
+  // };
   const handleChange = (event) => {
-      
-      const name = event.target?.name;
-      const value = event.target?.value;
+    const name = event.target?.name;
+    const value = event.target?.value;
 
-      if (!name) return;
+    if (!name) return;
 
-      setFormData((prev) => ({
-          ...prev,
-          [name]: value
-      }));
-      console.log("Changed:", name, value);
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    console.log("Changed:", name, value);
   };
 
   const handleSubmit = async (formData, selectedFiles) => {
     const storage = getStorage();
     const uploadPromises = selectedFiles.map(async (file) => {
-        const uniqueName = `${Date.now()}-${file.name}`;
-        const storageRef = ref(storage, uniqueName);
-        console.log("uploading file: ", uniqueName);
-        await uploadBytes(storageRef, file).then((snapshot) => {
-            console.log(`Uploaded file ${uniqueName}!`);
-        });
-        return await getDownloadURL(storageRef);
-    })
+      const uniqueName = `${Date.now()}-${file.name}`;
+      const storageRef = ref(storage, uniqueName);
+      console.log("uploading file: ", uniqueName);
+      await uploadBytes(storageRef, file).then((snapshot) => {
+        console.log(`Uploaded file ${uniqueName}!`);
+      });
+      return await getDownloadURL(storageRef);
+    });
 
     const urls = await Promise.all(uploadPromises);
     const fullFormData = {
@@ -80,7 +79,7 @@ const ReportPage = () => {
 
     try {
       const reportId = await writeReport(...Object.values(fullFormData));
-  
+
       setFormData({
         location: "",
         time: "",
@@ -135,46 +134,48 @@ const ReportPage = () => {
             ))}
           </div>
         );
-        case "report":
-          default:
-            return (
-              <>
-                <ReportForm
-                  ref={reportFormRef}
-                  formData={formData}
-                  handleChange={handleChange}
-                  handleSubmit={handleSubmit}
-                  submissionStatus={submissionStatus}
-                />
-                
-                {submissionStatus && (
-                  <div className="mt-6 p-4 bg-green-50 border border-green-300 rounded-lg text-green-700 font-medium space-y-2">
-                    <p>{submissionStatus}</p>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span>Your report ID is:</span>
-                      <span className="bg-blue-100 px-2 py-1 rounded font-mono">{reportId}</span>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(reportId);
-                          setCopied(true);
-                          setTimeout(() => setCopied(false), 2000);
-                        }}
-                        className="flex items-center gap-1 text-green-600 hover:text-indigo-800 transition"
-                        title="Copy to clipboard"
-                      >
-                        <Clipboard className="w-5 h-5" />
-                        <span className="text-sm font-normal">Copy ID</span>
-                      </button>
-                      {copied && (
-                        <span className="text-sm text-green-600">Copied!</span>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </>
-            );
-      }
-    };         
+      case "report":
+      default:
+        return (
+          <>
+            <ReportForm
+              ref={reportFormRef}
+              formData={formData}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              submissionStatus={submissionStatus}
+            />
+
+            {submissionStatus && (
+              <div className="mt-6 p-4 bg-green-50 border border-green-300 rounded-lg text-green-700 font-medium space-y-2">
+                <p>{submissionStatus}</p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span>Your report ID is:</span>
+                  <span className="bg-blue-100 px-2 py-1 rounded font-mono">
+                    {reportId}
+                  </span>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(reportId);
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
+                    }}
+                    className="flex items-center gap-1 text-green-600 hover:text-indigo-800 transition"
+                    title="Copy to clipboard"
+                  >
+                    <Clipboard className="w-5 h-5" />
+                    <span className="text-sm font-normal">Copy ID</span>
+                  </button>
+                  {copied && (
+                    <span className="text-sm text-green-600">Copied!</span>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        );
+    }
+  };
 
   return <ReportLayout>{renderContent()}</ReportLayout>;
 };
