@@ -1,7 +1,6 @@
 import { describe, it, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router";
-import AdminConsole from "./AdminConsole";
+import { MemoryRouter, Route, Routes } from "react-router-dom";import AdminConsole from "./AdminConsole";
 import { listenToReports } from "../apis/firebaseService";
 import { AuthContext } from "../apis/authProvider";
 
