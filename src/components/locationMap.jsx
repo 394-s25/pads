@@ -9,6 +9,7 @@ import {
   useMapsLibrary,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
+import { listenToReports } from "../apis/firebaseService";
 import "./locationMap.css";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -16,6 +17,32 @@ const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const HeatmapOverlay = ({ useHeatMap }) => {
   const map = useMap();
   const [heatmap, setHeatmap] = useState(null);
+  const [reportCoordinates, setReportCoordinates] = useState([]);
+
+  useEffect(() => {
+    const loadReportCoordinates = () => {
+      listenToReports((data) => {
+        if (data) {
+          const coordinates = Object.values(data)
+            .filter(
+              (report) =>
+                report.latitude !== null &&
+                report.longitude !== null &&
+                typeof report.latitude === "number" &&
+                typeof report.longitude === "number"
+            )
+            .map((report) => ({ lat: report.latitude, lng: report.longitude }));
+
+          setReportCoordinates(coordinates);
+          console.log(
+            `Loaded ${coordinates.length} report coordinates for heatmap`
+          );
+        }
+      });
+    };
+
+    loadReportCoordinates();
+  }, []);
 
   useEffect(() => {
     if (!map || !window.google || !google.maps.visualization) return;
@@ -35,9 +62,16 @@ const HeatmapOverlay = ({ useHeatMap }) => {
         heatmapLayer.setMap(null);
       }
     };
-  }, [map, useHeatMap]);
+  }, [map, useHeatMap, reportCoordinates]);
 
   function getPoints() {
+    if (reportCoordinates.length > 0) {
+      return reportCoordinates.map(
+        (coord) => new google.maps.LatLng(coord.lat, coord.lng)
+      );
+    }
+
+    // Fallback to default static points if no database coordinates
     return [
       new google.maps.LatLng(42.0526711, -87.674528),
       new google.maps.LatLng(42.05215, -87.675),
@@ -55,6 +89,8 @@ const HeatmapOverlay = ({ useHeatMap }) => {
       new google.maps.LatLng(42.0526, -87.6729),
     ];
   }
+
+  return null;
 };
 
 const LocationMap = ({ latitude, longitude, onLocationSelect }) => {
