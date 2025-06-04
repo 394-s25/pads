@@ -283,7 +283,7 @@ const ReportFormComponent = (
                                                 ${
                                                   isSelected
                                                     ? "bg-red-500 text-white hover:bg-red-600"
-                                                    : "bg-primary-blue text-white hover:bg-secondary-blue"
+                                                    : "bg-primary-blue text-white"
                                                 }
                                             `}
                   >
