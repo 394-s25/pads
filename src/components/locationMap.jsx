@@ -61,6 +61,12 @@ const LocationMap = ({ latitude, longitude }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [markerRef, marker] = useAdvancedMarkerRef();
   const [useHeatMap, setUseHeatMap] = useState(false);
+
+  const handleHeatmapToggle = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setUseHeatMap(!useHeatMap);
+  };
   return (
     <APIProvider
       apiKey={API_KEY}
@@ -85,8 +91,8 @@ const LocationMap = ({ latitude, longitude }) => {
           <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
         </div>
         <div className="heatmap-control">
-          <button onClick={() => setUseHeatMap(!useHeatMap)}>
-            Show heatmap
+          <button onClick={handleHeatmapToggle}>
+            {useHeatMap ? "Hide Heatmap" : "Show heatmap"}
           </button>
         </div>
       </MapControl>
