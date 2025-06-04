@@ -18,30 +18,34 @@ const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const ReportTooltip = ({ report, onViewDetails }) => {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200 max-w-sm">
-      <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-gray-800">
-          {report.emergencyNames?.join(', ')}
+    <div className="bg-white rounded-lg shadow-lg border border-gray-200 w-40 h-48 flex flex-col overflow-hidden">
+      <div className="bg-gray-50 p-2 border-b border-gray-200">
+        <h3 className="text-xs font-medium text-gray-800 truncate">
+          {report.location}
         </h3>
-        <p className="text-sm text-gray-600">
-          <span className="font-medium">Location:</span> {report.location}
-        </p>
-        <p className="text-sm text-gray-600">
-          <span className="font-medium">Time:</span> {new Date(report.time).toLocaleString()}
-        </p>
-        {report.notes && (
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">Notes:</span> {report.notes}
-          </p>
-        )}
-        <div className="pt-2">
-          <button 
-            onClick={() => onViewDetails(report.id)}
-            className="w-full bg-secondary-blue text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
-          >
-            View Details
-          </button>
+      </div>
+      
+      <div className="flex-grow p-2 space-y-2">
+        <div>
+          <p className="text-xs text-gray-500 font-medium">Time</p>
+          <p className="text-xs text-gray-700">{new Date(report.time).toLocaleString()}</p>
         </div>
+
+        <div>
+          <p className="text-xs text-gray-500 font-medium">Emergencies</p>
+          <p className="text-xs text-gray-700">
+            {report.emergencyNames && report.emergencyNames.length > 0 ? 'Yes' : 'No'}
+          </p>
+        </div>
+      </div>
+
+      <div className="p-2 border-t border-gray-100">
+        <button 
+          onClick={() => onViewDetails(report.id)}
+          className="w-full bg-primary-blue text-white px-2 py-1 text-xs rounded-xl transition-colors"
+        >
+          View Details
+        </button>
       </div>
     </div>
   );
@@ -54,6 +58,7 @@ const HeatmapOverlay = ({ useHeatMap, onViewDetails }) => {
   const [reportsInfo, setReportsInfo] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState(null);
+  const hoverTimeoutRef = useRef(null);
 
   useEffect(() => {
     const loadReportInfo = () => {
@@ -139,6 +144,28 @@ const HeatmapOverlay = ({ useHeatMap, onViewDetails }) => {
     ];
   }
 
+  const handleMouseEnter = (report) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    hoverTimeoutRef.current = setTimeout(() => {
+      console.log('Marker hover:', report);
+      setSelectedReport(report);
+      setTooltipPosition({ lat: report.lat, lng: report.lng });
+    }, 500);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    hoverTimeoutRef.current = setTimeout(() => {
+      console.log('Mouse out');
+      setSelectedReport(null);
+      setTooltipPosition(null);
+    }, 1000);
+  };
+
   return (
     <>
       {useHeatMap && reportsInfo.map((report) => (
@@ -146,17 +173,12 @@ const HeatmapOverlay = ({ useHeatMap, onViewDetails }) => {
           key={report.id}
           position={{ lat: report.lat, lng: report.lng }}
           onClick={() => onViewDetails(report.id)}
-          onMouseOver={() => {
-            console.log('Marker hover:', report);
-            setSelectedReport(report);
-            setTooltipPosition({ lat: report.lat, lng: report.lng });
-          }}
-          onMouseOut={() => {
-            setSelectedReport(null);
-            setTooltipPosition(null);
-          }}
         >
-          <div className="w-8 h-8 rounded-full cursor-pointer hover:scale-150 transition-transform" />
+          <div 
+            className="w-10 h-10 rounded-full cursor-pointer hover:scale-150 transition-transform"
+            onMouseEnter={() => handleMouseEnter(report)}
+            onMouseLeave={handleMouseLeave}
+          />
         </AdvancedMarker>
       ))}
       {selectedReport && tooltipPosition && (
