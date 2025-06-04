@@ -16,7 +16,7 @@ const AdminConsole = () => {
   const [reports, setReports] = useState({});
   const [sortedReports, setSortedReports] = useState([]);
   const [sortBy, setSortBy] = useState("mostRecent");
-  const [activeTab, setActiveTab] = useState(tab || "unresolvedReports");
+  const [activeTab, setActiveTab] = useState(tab || "pendingReports");
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
@@ -113,7 +113,9 @@ const AdminConsole = () => {
       const reportDate = new Date(report.time).getTime();
       const startDateObj = startDate ? new Date(startDate).getTime() : null;
       const endDateObj = endDate
-        ? new Date(new Date(endDate).toISOString().split("T")[0] + "T23:59:59.999Z").getTime()
+        ? new Date(
+            new Date(endDate).toISOString().split("T")[0] + "T23:59:59.999Z"
+          ).getTime()
         : null;
 
       console.log("Parsed Report Date:", reportDate);
@@ -239,7 +241,25 @@ const AdminConsole = () => {
               report={report}
               onViewDetails={() => handleViewDetails(key)}
               onGetDirections={() => handleGetDirections(report.location)}
-              onMarkResolved={() => handleMarkUnresolved(key)}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    if (activeTab === "pendingReports") {
+      const pendingReports = sortedReports.filter(
+        ([, report]) => report.isResolved == null
+      );
+
+      return (
+        <div>
+          {pendingReports.map(([key, report]) => (
+            <ReportCard
+              key={key}
+              report={report}
+              onViewDetails={() => handleViewDetails(key)}
+              onGetDirections={() => handleGetDirections(report.location)}
             />
           ))}
         </div>
@@ -248,7 +268,7 @@ const AdminConsole = () => {
 
     if (activeTab === "unresolvedReports") {
       const unresolvedReports = sortedReports.filter(
-        ([, report]) => !report.isResolved
+        ([, report]) => report.isResolved === false
       );
 
       return (
@@ -258,7 +278,6 @@ const AdminConsole = () => {
               key={key}
               report={report}
               onViewDetails={() => handleViewDetails(key)}
-              onMarkResolved={() => handleMarkResolved(key)}
             />
           ))}
         </div>
@@ -275,6 +294,7 @@ const AdminConsole = () => {
         title="Admin Console"
         showLogout={true}
         tabs={[
+          { id: "pendingReports", label: "Pending Reports" },
           { id: "unresolvedReports", label: "Unresolved Reports" },
           { id: "resolvedReports", label: "Resolved Reports" },
         ]}

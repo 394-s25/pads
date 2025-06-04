@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 
-const ReportCard = ({ report, onViewDetails, onMarkResolved }) => {
-  const { location, time, notes, isResolved, emergencyNames } = report;
+const ReportCard = ({ report, onViewDetails }) => {
+  const { location, time, notes, emergencyNames } = report;
 
   return (
     <div className="p-6 mb-6 bg-white border border-gray-200 rounded-lg shadow-xs">
@@ -47,23 +47,6 @@ const ReportCard = ({ report, onViewDetails, onMarkResolved }) => {
           View Details
           <ArrowRight size={20} className="ml-2" />
         </button>
-        {/* moving the resolve functionality to the page itself (user should review page to confirm status to prevent errors)*/}
-        {/* <button
-                    onClick={onGetDirections}
-                    className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition"
-                >
-                    Directions
-                </button> */}
-        {/* <button
-          onClick={onMarkResolved}
-          className={`px-4 py-2 font-medium rounded-full transition ${
-            isResolved
-              ? "bg-secondary-orange text-white hover:bg-red-700"
-              : "bg-tertiary-blue text-primary-blue hover:bg-tertiary-blue/75"
-          }`}
-        >
-          {isResolved ? "Mark Unresolved" : "Mark Resolved"}
-        </button> */}
       </div>
     </div>
   );

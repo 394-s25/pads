@@ -70,6 +70,16 @@ const ViewReport = () => {
     }
   };
 
+  // New function to handle specific status setting
+  const handleSetStatus = async (newStatus) => {
+    try {
+      await updateIsResolved(reportId, newStatus);
+      setResolved(newStatus);
+    } catch (error) {
+      console.error("Error updating report status:", error);
+    }
+  };
+
   const handleLeaveNote = async () => {
     try {
       await updateAdminNotes(reportId, note);
@@ -221,17 +231,39 @@ const ViewReport = () => {
         </div>
       </div>
 
-      {/* Buttons at the bottom */}
       <div className="flex justify-center gap-4 mt-8">
+        {resolved == null ? (
+          <>
+            <button
+              className="bg-secondary-blue hover:bg-secondary-blue/75 text-white font-bold py-2 px-4 rounded-full flex items-center"
+              onClick={() => handleSetStatus(true)}
+            >
+              Mark as Resolved
+            </button>
+            <button
+              className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-full flex items-center"
+              onClick={() => handleSetStatus(false)}
+            >
+              Mark as Unresolved
+            </button>
+          </>
+        ) : (
+          // When status is true or false, show toggle button
+          <button
+            className={`${
+              !resolved
+                ? "bg-secondary-blue hover:bg-secondary-blue/75"
+                : "bg-red-500 hover:bg-red-400"
+            } text-white font-bold py-2 px-4 rounded-full flex items-center`}
+            onClick={handleStatusChange}
+          >
+            {resolved ? "Mark as Unresolved" : "Mark as Resolved"}
+          </button>
+        )}
+
         <button
           className="bg-primary-blue hover:bg-secondary-blue text-white font-bold py-2 px-4 rounded-full flex items-center"
-          onClick={handleStatusChange}
-        >
-          {resolved ? "Mark as Unresolved" : "Mark as Resolved"}
-        </button>
-        <button
-          className="bg-primary-blue hover:bg-secondary-blue text-white font-bold py-2 px-4 rounded-full flex items-center"
-          onClick={() => setShowModal(true)} // Open the modal
+          onClick={() => setShowModal(true)}
         >
           Leave a Note to the Reporter
         </button>

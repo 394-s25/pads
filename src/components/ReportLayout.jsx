@@ -29,6 +29,7 @@ const ReportLayout = ({ children }) => {
         tabs={[
           { id: "map", label: "Map" },
           { id: "report", label: "Report" },
+          { id: "status", label: "Check Status" },
           { id: "resources", label: "Resources" },
         ]}
         activeTab={activeTab}
@@ -37,7 +38,7 @@ const ReportLayout = ({ children }) => {
       <div className="container mx-auto p-6 max-w-4xl">
         <header className="mb-8 border-b border-gray-300 pb-4">
           <h1 className="text-3xl font-bold text-indigo-900">Reports</h1>
-          <div className="flex gap-4 mt-4">
+          {/* <div className="flex gap-4 mt-4">
             <Link to="/create" className={tabClass("/create")}>
               Create Report
             </Link>
@@ -47,12 +48,9 @@ const ReportLayout = ({ children }) => {
             <Link to="/status" className={tabClass("/status")}>
               Report Status
             </Link>
-          </div>
+          </div> */}
         </header>
-
-        <section className="bg-white p-6 rounded-xl shadow-lg">
-          {children}
-        </section>
+        {children}
       </div>
     </div>
   );

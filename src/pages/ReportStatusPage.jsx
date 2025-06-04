@@ -11,7 +11,13 @@ const ReportStatusPage = () => {
   const handleCheck = async () => {
     try {
       const data = await getReportById(inputId.trim());
-      setStatus(data?.isResolved ? "Resolved" : "Not resolved");
+      setStatus(
+        data?.isResolved == null
+          ? "Pending"
+          : data.isResolved
+          ? "Resolved"
+          : "Not resolved"
+      );
       setNotes(data?.AdminNotes || "No notes available.");
       setError("");
     } catch {
@@ -23,8 +29,12 @@ const ReportStatusPage = () => {
 
   return (
     <ReportLayout>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-2">Check Report Status</h2>
-      <p className="text-gray-600 mb-6">Enter your Report ID to check the status.</p>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+        Check Report Status
+      </h2>
+      <p className="text-gray-600 mb-6">
+        Enter your Report ID to check the status.
+      </p>
       <input
         type="text"
         value={inputId}
@@ -38,7 +48,9 @@ const ReportStatusPage = () => {
       >
         Check Status
       </button>
-      {status && <p className="mt-4 text-green-700 font-semibold">Status: {status}</p>}
+      {status && (
+        <p className="mt-4 text-green-700 font-semibold">Status: {status}</p>
+      )}
       {notes && <p className="mt-4 text-gray-700">Notes: {notes}</p>}
       {error && <p className="mt-4 text-red-500">{error}</p>}
     </ReportLayout>

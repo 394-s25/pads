@@ -282,8 +282,8 @@ const ReportFormComponent = (
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 border border-slate-100
                                                 ${
                                                   isSelected
-                                                    ? "bg-red-500 text-white border border-red-600 hover:bg-red-600"
-                                                    : "bg-indigo-600 text-white hover:bg-indigo-200 hover:text-black border border-indigo-600"
+                                                    ? "bg-red-500 text-white hover:bg-red-600"
+                                                    : "bg-primary-blue text-white hover:bg-secondary-blue"
                                                 }
                                             `}
                   >
@@ -406,7 +406,7 @@ const ReportFormComponent = (
         <div className="mt-6">
           <button
             type="submit"
-            className="bg-indigo-900 text-white py-3 px-6 rounded-full font-medium shadow-md hover:bg-indigo-600 transition-colors w-full sm:w-auto border border-slate-100 active:bg-indigo-200 active:text-black"
+            className="bg-secondary-blue text-white py-3 px-6 rounded-full font-medium shadow-md hover:bg-secondary-blue/75 transition-colors w-full sm:w-auto border border-slate-100 active:bg-indigo-200 active:text-black"
           >
             Submit Report
           </button>

@@ -17,8 +17,10 @@ const NavBar = ({ tabs, activeTab, showLogout, logoSrc, title }) => {
 
   const tabRouteMap = {
     map: "/create/map",
+    status: "/status",
     report: "/create/report",
     resources: "/create/resources",
+    pendingReports: "/admin/pendingReports",
     resolvedReports: "/admin/resolvedReports",
     unresolvedReports: "/admin/unresolvedReports",
   };

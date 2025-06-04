@@ -9,7 +9,7 @@ const Landing = () => {
 
   useEffect(() => {
     if (authUser) {
-      navigate("/admin/unresolvedReports");
+      navigate("/admin/pendingReports");
     }
   }, [authUser, navigate]);
 
