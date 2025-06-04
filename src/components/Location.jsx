@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import LocationMap from "./locationMap";
 import "./location.css";
 
-const Location = () => {
+const Location = ({ onLocationSelect }) => {
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
 
@@ -31,6 +31,7 @@ const Location = () => {
             id="map"
             latitude={location.latitude}
             longitude={location.longitude}
+            onLocationSelect={onLocationSelect}
           ></LocationMap>
         </div>
       ) : (

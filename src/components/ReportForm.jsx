@@ -40,6 +40,15 @@ const ReportFormComponent = (
     },
   }));
 
+  const handleMapLocationSelect = (selectedAddress) => {
+    handleChange({
+      target: {
+        name: "location",
+        value: selectedAddress,
+      },
+    });
+  };
+
   const toggleLocation = () => {
     setUseCurrentLocation((prev) => !prev);
   };
@@ -217,7 +226,7 @@ const ReportFormComponent = (
           </label>
           {useCurrentLocation && (
             <div className="mt-2 bg-indigo-50 p-3 rounded-lg">
-              <Location />
+              <Location onLocationSelect={handleMapLocationSelect} />
             </div>
           )}
         </div>

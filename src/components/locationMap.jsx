@@ -57,7 +57,7 @@ const HeatmapOverlay = ({ useHeatMap }) => {
   }
 };
 
-const LocationMap = ({ latitude, longitude }) => {
+const LocationMap = ({ latitude, longitude, onLocationSelect }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [markerRef, marker] = useAdvancedMarkerRef();
   const [useHeatMap, setUseHeatMap] = useState(false);
@@ -66,6 +66,14 @@ const LocationMap = ({ latitude, longitude }) => {
     e.preventDefault();
     e.stopPropagation();
     setUseHeatMap(!useHeatMap);
+  };
+
+  const handlePlaceSelect = (place) => {
+    setSelectedPlace(place);
+
+    if (onLocationSelect && place && place.formatted_address) {
+      onLocationSelect(place.formatted_address);
+    }
   };
   return (
     <APIProvider
@@ -88,7 +96,7 @@ const LocationMap = ({ latitude, longitude }) => {
       </Map>
       <MapControl position={ControlPosition.TOP}>
         <div className="autocomplete-control">
-          <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
+          <PlaceAutocomplete onPlaceSelect={handlePlaceSelect} />
         </div>
         <div className="heatmap-control">
           <button onClick={handleHeatmapToggle}>
@@ -139,7 +147,7 @@ const PlaceAutocomplete = ({ onPlaceSelect }) => {
   }, [onPlaceSelect, placeAutocomplete]);
   return (
     <div className="autocomplete-container">
-      <input ref={inputRef} />
+      <input ref={inputRef} placeholder="Search for a location..." />
     </div>
   );
 };
