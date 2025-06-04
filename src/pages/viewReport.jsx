@@ -84,6 +84,12 @@ const ViewReport = () => {
     try {
       await updateAdminNotes(reportId, note);
       alert("Note successfully updated!");
+
+      setReport((prevReport) => ({
+        ...prevReport,
+        AdminNotes: note,
+      }));
+
       setShowModal(false);
     } catch (error) {
       console.error("Error leaving a note:", error);
@@ -226,6 +232,16 @@ const ViewReport = () => {
                   <span>{report.email}</span>
                 </div>
               )}
+            </div>
+          )}
+
+          {report.AdminNotes && (
+            <div className="md:col-span-2">
+              <h2 className="text-primary-blue text-xl font-bold mb-4 flex items-center gap-2">
+                <FileText size={20} className="text-secondary-blue" />
+                Admin Notes
+              </h2>
+              <p className="text-gray-600">{report.AdminNotes}</p>
             </div>
           )}
         </div>
