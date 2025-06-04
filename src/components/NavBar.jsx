@@ -23,6 +23,7 @@ const NavBar = ({ tabs, activeTab, showLogout, logoSrc, title }) => {
     pendingReports: "/admin/pendingReports",
     resolvedReports: "/admin/resolvedReports",
     unresolvedReports: "/admin/unresolvedReports",
+    reportMap: "/admin/reportMap",
   };
 
   return (

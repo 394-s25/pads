@@ -123,14 +123,17 @@ const ReportFormComponent = (
 
   useEffect(() => {
     if (useCurrentTime) {
-      const current = getCurrentTime();
-      setTime(formatReadableTime(current));
-      handleChange({
-        target: {
-          name: "time",
-          value: current,
-        },
-      });
+        const current = getCurrentTime();
+        setTime(formatReadableTime(current));
+        const d = new Date(current);
+        d.setUTCHours(d.getUTCHours() - 5);           
+        const chicagoTime = d.toISOString();
+        handleChange({
+            target: {
+            name: "time",
+            value: chicagoTime,
+            },
+        });
     }
   }, [useCurrentTime]);
 
@@ -283,7 +286,7 @@ const ReportFormComponent = (
                                                 ${
                                                   isSelected
                                                     ? "bg-red-500 text-white hover:bg-red-600"
-                                                    : "bg-primary-blue text-white hover:bg-secondary-blue"
+                                                    : "bg-primary-blue text-white"
                                                 }
                                             `}
                   >

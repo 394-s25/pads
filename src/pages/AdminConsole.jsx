@@ -8,6 +8,7 @@ import {
 import ReportCard from "../components/ReportCard";
 import NavBar from "../components/NavBar";
 import { useAuth } from "../apis/authProvider";
+import AdminLocation from "../components/adminLocation";
 
 const AdminConsole = () => {
   const { authUser } = useAuth();
@@ -284,6 +285,14 @@ const AdminConsole = () => {
       );
     }
 
+    if (activeTab === "reportMap") {
+      return (
+        <div>
+          <AdminLocation />
+        </div>
+      )
+    }
+
     return null;
   };
 
@@ -297,130 +306,135 @@ const AdminConsole = () => {
           { id: "pendingReports", label: "Pending Reports" },
           { id: "unresolvedReports", label: "Unresolved Reports" },
           { id: "resolvedReports", label: "Resolved Reports" },
+          { id: "reportMap", label: "Map"}
         ]}
         activeTab={activeTab}
         setActiveTab={(tab) => navigate(`/admin/${tab}`)}
       />
 
       <div className="m-8">
-        <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            Filter Reports
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label
-                htmlFor="startDate"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Start Date
-              </label>
-              <input
-                type="date"
-                id="startDate"
-                name="startDate"
-                value={filters.startDate}
-                onChange={handleFilterChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="endDate"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                End Date
-              </label>
-              <input
-                type="date"
-                id="endDate"
-                name="endDate"
-                value={filters.endDate}
-                onChange={handleFilterChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="location"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Location
-              </label>
-              <input
-                type="text"
-                id="location"
-                name="location"
-                value={filters.location}
-                onChange={handleFilterChange}
-                placeholder="Enter location"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="notes"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Notes
-              </label>
-              <input
-                type="text"
-                id="notes"
-                name="notes"
-                value={filters.notes}
-                onChange={handleFilterChange}
-                placeholder="Enter notes"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="emergency"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Emergency
-              </label>
-              <select
-                id="emergency"
-                name="emergency"
-                value={filters.emergency}
-                onChange={handleFilterChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="">All Emergencies</option>
-                {emergencyOptions.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+        {activeTab !== "reportMap" && (
+          <>
+          <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+              Filter Reports
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label
+                  htmlFor="startDate"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                  value={filters.startDate}
+                  onChange={handleFilterChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="endDate"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  id="endDate"
+                  name="endDate"
+                  value={filters.endDate}
+                  onChange={handleFilterChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="location"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Location
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  value={filters.location}
+                  onChange={handleFilterChange}
+                  placeholder="Enter location"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="notes"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Notes
+                </label>
+                <input
+                  type="text"
+                  id="notes"
+                  name="notes"
+                  value={filters.notes}
+                  onChange={handleFilterChange}
+                  placeholder="Enter notes"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="emergency"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Emergency
+                </label>
+                <select
+                  id="emergency"
+                  name="emergency"
+                  value={filters.emergency}
+                  onChange={handleFilterChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">All Emergencies</option>
+                  {emergencyOptions.map((option, index) => (
+                    <option key={index} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex justify-end gap-4 my-4">
-          <button
-            onClick={() => handleSortChange("mostRecent")}
-            className={`px-4 py-2 text-sm font-medium rounded-full ${
-              sortBy === "mostRecent"
-                ? "bg-secondary-blue text-white"
-                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-            }`}
-          >
-            Sort by Date
-          </button>
-          <button
-            onClick={() => handleSortChange("emergencies")}
-            className={`px-4 py-2 text-sm font-medium rounded-full ${
-              sortBy === "emergencies"
-                ? "bg-secondary-blue text-white"
-                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-            }`}
-          >
-            Sort by Emergency
-          </button>
-        </div>
+          <div className="flex justify-end gap-4 my-4">
+            <button
+              onClick={() => handleSortChange("mostRecent")}
+              className={`px-4 py-2 text-sm font-medium rounded-full ${
+                sortBy === "mostRecent"
+                  ? "bg-secondary-blue text-white"
+                  : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+              }`}
+            >
+              Sort by Date
+            </button>
+            <button
+              onClick={() => handleSortChange("emergencies")}
+              className={`px-4 py-2 text-sm font-medium rounded-full ${
+                sortBy === "emergencies"
+                  ? "bg-secondary-blue text-white"
+                  : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+              }`}
+            >
+              Sort by Emergency
+            </button>
+          </div>
+        </>
+        )}
 
         {renderContent()}
       </div>
