@@ -123,14 +123,17 @@ const ReportFormComponent = (
 
   useEffect(() => {
     if (useCurrentTime) {
-      const current = getCurrentTime();
-      setTime(formatReadableTime(current));
-      handleChange({
-        target: {
-          name: "time",
-          value: current,
-        },
-      });
+        const current = getCurrentTime();
+        setTime(formatReadableTime(current));
+        const d = new Date(current);
+        d.setUTCHours(d.getUTCHours() - 5);           
+        const chicagoTime = d.toISOString();
+        handleChange({
+            target: {
+            name: "time",
+            value: chicagoTime,
+            },
+        });
     }
   }, [useCurrentTime]);
 
