@@ -6,6 +6,7 @@ import ReportForm from "../components/ReportForm";
 import ReportLayout from "../components/ReportLayout";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { Clipboard } from "lucide-react";
+import { geocode } from "../utils/geoCoding";
 
 const ReportPage = () => {
   const { section } = useParams(); // 'report', 'map', or 'resources'
@@ -14,6 +15,8 @@ const ReportPage = () => {
   const [reportId, setReportId] = useState("");
   const [formData, setFormData] = useState({
     location: "",
+    latitude: null,
+    longitude: null,
     time: "",
     numPeople: 0,
     emergencies: "",
@@ -59,29 +62,63 @@ const ReportPage = () => {
   };
 
   const handleSubmit = async (formData, selectedFiles) => {
-    const storage = getStorage();
-    const uploadPromises = selectedFiles.map(async (file) => {
-      const uniqueName = `${Date.now()}-${file.name}`;
-      const storageRef = ref(storage, uniqueName);
-      console.log("uploading file: ", uniqueName);
-      await uploadBytes(storageRef, file).then((snapshot) => {
-        console.log(`Uploaded file ${uniqueName}!`);
-      });
-      return await getDownloadURL(storageRef);
-    });
-
-    const urls = await Promise.all(uploadPromises);
-    const fullFormData = {
-      ...formData,
-      mediaUrls: [...(formData.mediaUrls || []), ...urls],
-    };
-    console.log("Final location string submitted:", fullFormData.location);
-
     try {
+      let finalFormData = { ...formData };
+
+      if (formData.location && formData.location.trim() !== "") {
+        console.log("Geocoding address on submission:", formData.location);
+        try {
+          const coords = await geocode(
+            formData.location,
+            import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+          );
+          finalFormData.latitude = coords.lat;
+          finalFormData.longitude = coords.lng;
+          console.log("Geocoded coordinates:", coords);
+        } catch (error) {
+          console.warn(
+            "Failed to geocode address, submitting without coordinates:",
+            error
+          );
+
+          finalFormData.latitude = null;
+          finalFormData.longitude = null;
+        }
+      } else {
+        // No location provided
+        finalFormData.latitude = null;
+        finalFormData.longitude = null;
+      }
+
+      const storage = getStorage();
+      const uploadPromises = selectedFiles.map(async (file) => {
+        const uniqueName = `${Date.now()}-${file.name}`;
+        const storageRef = ref(storage, uniqueName);
+        console.log("uploading file: ", uniqueName);
+        await uploadBytes(storageRef, file).then((snapshot) => {
+          console.log(`Uploaded file ${uniqueName}!`);
+        });
+        return await getDownloadURL(storageRef);
+      });
+
+      const urls = await Promise.all(uploadPromises);
+      const fullFormData = {
+        ...finalFormData,
+        mediaUrls: [...(finalFormData.mediaUrls || []), ...urls],
+      };
+
+      console.log("Final form data submitted:", {
+        location: fullFormData.location,
+        latitude: fullFormData.latitude,
+        longitude: fullFormData.longitude,
+      });
+
       const reportId = await writeReport(...Object.values(fullFormData));
 
       setFormData({
         location: "",
+        latitude: null,
+        longitude: null,
         time: "",
         numPeople: 0,
         emergencies: "",
