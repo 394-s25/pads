@@ -7,6 +7,7 @@ import ReportLayout from "../components/ReportLayout";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { Clipboard } from "lucide-react";
 import { geocode } from "../utils/geoCoding";
+//import { sendReportConfirmationEmail } from "../../server/sendEmail.cjs";
 
 const ReportPage = () => {
   const { section } = useParams(); // 'report', 'map', or 'resources'
@@ -137,6 +138,7 @@ const ReportPage = () => {
 
       setReportId(reportId);
 
+      // Send confirmation email
       if (fullFormData.email && fullFormData.email.includes("@")) {
         try {
           await fetch("http://localhost:5000/send-email", {
@@ -153,7 +155,7 @@ const ReportPage = () => {
         } catch (err) {
           console.error("Failed to send confirmation email", err);
         }
-      }      
+      }
 
       setSubmissionStatus("Report successfully submitted.");
     } catch (error) {
