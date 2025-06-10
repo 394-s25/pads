@@ -24,19 +24,9 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@vitejs/plugin-react": "^4.3.4",
-<<<<<<< HEAD
     "@vitest/coverage-v8": "^3.0.9",
     "@vitest/ui": "^3.0.9",
     "jsdom": "^26.0.0",
-=======
-    "@vitest/coverage-v8": "^3.2.2",
-    "@vitest/ui": "^3.2.2",
-    "autoprefixer": "^10.4.21",
-    "jsdom": "^26.0.0",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.6",
-    "undefined": "^0.1.0",
->>>>>>> f64f547dfabff5913d1a9b6cfd81b61e7af983bd
     "vite": "^6.2.3",
     "vitest": "^3.2.2"
   }
