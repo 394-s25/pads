@@ -113,4 +113,6 @@ $RECYCLE.BIN/
 #Environment
 .env
 
+coverage/
+
 # End of https://www.toptal.com/developers/gitignore/api/react,firebase,visualstudiocode,macos,windows

@@ -26,6 +26,7 @@ https://pads-lake-county-good-neighbor.web.app/create/report
 ![Admin Console Screenshot](public/pads_admin_console.png)
 https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
 
+
 ---
 
 ## How to install and run the app
@@ -56,6 +57,14 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
 3. **Set up Firebase (see below).**
 
 4. **Start the development server:**
+   ```bash
+   npm start
+   ```
+   or
+   ```bash
+   npm run dev
+   ```
+
    If using the confirmation email functionality, first start up the email server as follows:
    ```bash
    'node server/server.js'
@@ -122,6 +131,7 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
 
 ---
 
+
 ## Customizations
 
 - If you would like to edit the resources displayed on the resource page or thier descriptions, you can do so in  public/resources.json. You can simply edit the text inside the quotes to be to your preferences.
@@ -143,6 +153,7 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
       - In the folder pads, run the command `node verifyEmail.js` to test configuration.
       - Once you confirm recipt the test email, select Verify Integration in SendGrid to finish setting up. 
    - You can edit the contents of the confirmation email in server/sendEmail.js.
+
 ---
 
 ## Known bugs

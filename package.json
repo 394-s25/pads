@@ -19,7 +19,6 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "firebase": "^11.7.0",
-    "lucide": "^0.510.0",
     "lucide-react": "^0.510.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -28,15 +27,13 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.2.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "^3.0.9",
     "@vitest/ui": "^3.0.9",
-    "autoprefixer": "^10.4.21",
     "jsdom": "^26.0.0",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.6",
     "vite": "^6.2.3",
-    "vitest": "^3.0.9"
+    "vitest": "^3.2.2"
   }
 }
