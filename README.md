@@ -26,7 +26,6 @@ https://pads-lake-county-good-neighbor.web.app/create/report
 ![Admin Console Screenshot](public/pads_admin_console.png)
 https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
 
-
 ---
 
 ## How to install and run the app
@@ -39,17 +38,21 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/your-org/pads.git
    cd pads
    ```
-   If using confirmation email functionality, please clone the *emails branch* with this implementation:
+
+   If using confirmation email functionality, please clone the _emails branch_ with this implementation:
+
    ```bash
    git clone --single-branch --branch emails https://github.com/394-s25/pads.git
    cd pads
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
@@ -57,15 +60,19 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
 3. **Set up Firebase (see below).**
 
 4. **Start the development server:**
+
    ```bash
    npm start
    ```
+
    or
+
    ```bash
    npm run dev
    ```
 
    If using the confirmation email functionality, first start up the email server as follows:
+
    ```bash
    'node server/server.js'
    ```
@@ -73,7 +80,9 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
    ```bash
    npm start
    ```
+
    or
+
    ```bash
    npm run dev
    ```
@@ -121,7 +130,7 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
     storageBucket: "YOUR_STORAGE_BUCKET",
     messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
     appId: "YOUR_APP_ID",
-    measurementId: "YOUR_MEASUREMENT_ID"
+    measurementId: "YOUR_MEASUREMENT_ID",
   };
   ```
 
@@ -131,28 +140,28 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
 
 ---
 
-
 ## Customizations
 
-- If you would like to edit the resources displayed on the resource page or thier descriptions, you can do so in  public/resources.json. You can simply edit the text inside the quotes to be to your preferences.
+- If you would like to edit the resources displayed on the resource page or thier descriptions, you can do so in public/resources.json. You can simply edit the text inside the quotes to be to your preferences.
 
 ## Other third-party connections
 
-- **Google Maps API**: Used for geocoding and displaying maps.  
+- **Google Maps API**: Used for geocoding and displaying maps.
+
   - Get an API key from [Google Cloud Console](https://console.cloud.google.com/).
   - Add your API key to your `.env` file as `VITE_GOOGLE_MAPS_API_KEY=your_key_here`.
 
 - **Twillio SendGrid API**: Used for sending email notifications.
   - Sign up for SendGrid at [SendGrid Signup](https://login.twilio.com/u/signup).
   - Get an API key for outreach@padslakecounty.org at [SendGrid Web API](https://app.sendgrid.com/guide/integrate/langs/nodejs)
-      - Alternatively, navigate form SendGrid home to Email API -> Integration Guide -> Web API -> Node.js -> 
-        Create Key (copy to clip board here and save in a safe place, you will not be able to see the key again)
-        -> check I've integrated the code above.
-      - Add your API key to your `.env` file as `SENDGRID_API_KEY=your_key_here`.
-      - Change `to: 'test@example.com'` to be an email you have access to.
-      - In the folder pads, run the command `node verifyEmail.js` to test configuration.
-      - Once you confirm recipt the test email, select Verify Integration in SendGrid to finish setting up. 
-   - You can edit the contents of the confirmation email in server/sendEmail.js.
+    - Alternatively, navigate form SendGrid home to Email API -> Integration Guide -> Web API -> Node.js ->
+      Create Key (copy to clip board here and save in a safe place, you will not be able to see the key again)
+      -> check I've integrated the code above.
+    - Add your API key to your `.env` file as `SENDGRID_API_KEY=your_key_here`.
+    - Change `to: 'test@example.com'` to be an email you have access to.
+    - In the folder pads, run the command `node verifyEmail.js` to test configuration.
+    - Once you confirm recipt the test email, select Verify Integration in SendGrid to finish setting up.
+  - You can edit the contents of the confirmation email in server/sendEmail.js.
 
 ---
 
