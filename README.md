@@ -44,13 +44,6 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
    cd pads
    ```
 
-   If using confirmation email functionality, please clone the _emails branch_ with this implementation:
-
-   ```bash
-   git clone --single-branch --branch emails https://github.com/394-s25/pads.git
-   cd pads
-   ```
-
 2. **Install dependencies:**
 
    ```bash
@@ -71,7 +64,7 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
    npm run dev
    ```
 
-   If using the confirmation email functionality, first start up the email server as follows:
+  Start up the email server as follows:
 
    ```bash
    'node server/server.js'
@@ -158,10 +151,10 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
       Create Key (copy to clip board here and save in a safe place, you will not be able to see the key again)
       -> check I've integrated the code above.
     - Add your API key to your `.env` file as `SENDGRID_API_KEY=your_key_here`.
-    - Change `to: 'test@example.com'` to be an email you have access to.
+    - Change `to: 'test@example.com'` to be an email you have access to check.
     - In the folder pads, run the command `node verifyEmail.js` to test configuration.
     - Once you confirm recipt the test email, select Verify Integration in SendGrid to finish setting up.
-  - You can edit the contents of the confirmation email in server/sendEmail.js.
+  - You can edit the contents of the default confirmation email in server/sendEmail.js.
 
 ---
 
