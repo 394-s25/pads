@@ -14,7 +14,6 @@
     "@sendgrid/mail": "^8.1.5",
     "@tailwindcss/vite": "^4.1.6",
     "@vis.gl/react-google-maps": "^1.5.2",
-    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
