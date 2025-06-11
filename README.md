@@ -15,13 +15,17 @@ This is a React web application for PADS Lake County staff and community members
 ## What does it look like?
 
 **Landing Page:**  
-![Landing Page Screenshot](https://pads-lake-county-good-neighbor.web.app/)
+![Landing Page Screenshot](public/pads_landing_page.png)
+https://pads-lake-county-good-neighbor.web.app/
 
 **Reporting Page for the User:**  
-![Admin Console Screenshot](https://pads-lake-county-good-neighbor.web.app/create/report)
+![Client Console Screenshot](public/pads_client_report.png)
+https://pads-lake-county-good-neighbor.web.app/create/report
 
 **Admin Console:**  
-![Admin Console Screenshot](https://pads-lake-county-good-neighbor.web.app/admin/pendingReports)
+![Admin Console Screenshot](public/pads_admin_console.png)
+https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
+
 
 ---
 
@@ -39,6 +43,11 @@ This is a React web application for PADS Lake County staff and community members
    git clone https://github.com/your-org/pads.git
    cd pads
    ```
+   If using confirmation email functionality, please clone the *emails branch* with this implementation:
+   ```bash
+   git clone --single-branch --branch emails https://github.com/394-s25/pads.git
+   cd pads
+   ```
 
 2. **Install dependencies:**
    ```bash
@@ -48,6 +57,19 @@ This is a React web application for PADS Lake County staff and community members
 3. **Set up Firebase (see below).**
 
 4. **Start the development server:**
+   ```bash
+   npm start
+   ```
+   or
+   ```bash
+   npm run dev
+   ```
+
+   If using the confirmation email functionality, first start up the email server as follows:
+   ```bash
+   'node server/server.js'
+   ```
+
    ```bash
    npm start
    ```
@@ -109,11 +131,28 @@ This is a React web application for PADS Lake County staff and community members
 
 ---
 
+
+## Customizations
+
+- If you would like to edit the resources displayed on the resource page or thier descriptions, you can do so in  public/resources.json. You can simply edit the text inside the quotes to be to your preferences.
+
 ## Other third-party connections
 
 - **Google Maps API**: Used for geocoding and displaying maps.  
   - Get an API key from [Google Cloud Console](https://console.cloud.google.com/).
   - Add your API key to your `.env` file as `VITE_GOOGLE_MAPS_API_KEY=your_key_here`.
+
+- **Twillio SendGrid API**: Used for sending email notifications.
+  - Sign up for SendGrid at [SendGrid Signup](https://login.twilio.com/u/signup).
+  - Get an API key for outreach@padslakecounty.org at [SendGrid Web API](https://app.sendgrid.com/guide/integrate/langs/nodejs)
+      - Alternatively, navigate form SendGrid home to Email API -> Integration Guide -> Web API -> Node.js -> 
+        Create Key (copy to clip board here and save in a safe place, you will not be able to see the key again)
+        -> check I've integrated the code above.
+      - Add your API key to your `.env` file as `SENDGRID_API_KEY=your_key_here`.
+      - Change `to: 'test@example.com'` to be an email you have access to.
+      - In the folder pads, run the command `node verifyEmail.js` to test configuration.
+      - Once you confirm recipt the test email, select Verify Integration in SendGrid to finish setting up. 
+   - You can edit the contents of the confirmation email in server/sendEmail.js.
 
 ---
 
