@@ -52,23 +52,13 @@ https://pads-lake-county-good-neighbor.web.app/admin/pendingReports
 
 3. **Set up Firebase (see below).**
 
-4. **Start the development server:**
+4 (a). **Start the email server:**
 
    ```bash
-   npm start
+   node server/server.js
    ```
 
-   or
-
-   ```bash
-   npm run dev
-   ```
-
-  Start up the email server as follows:
-
-   ```bash
-   'node server/server.js'
-   ```
+4 (b). **Start the development server:**
 
    ```bash
    npm start
