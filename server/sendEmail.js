@@ -10,7 +10,7 @@ sgMail.setApiKey(SENDGRID_KEY);
 export default async function sendEmail(reportId, recipientEmail) {
   const msg = {
     to: recipientEmail,
-    from: 'sophiafresquez13@gmail.com',   // must be a verified sender in SendGrid
+    from: 'outreach@padslakecounty.org',   // must be a verified sender in SendGrid
     subject: 'PADS Lake County Report Confirmation',
     text: `Thank you for notifying PADS Lake County.
             Your report ID is ${reportId}.
