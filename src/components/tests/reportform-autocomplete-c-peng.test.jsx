@@ -68,14 +68,14 @@ describe('ReportForm - autocomplete input', () => {
 
     // simulate user typing
     fireEvent.change(locationInput, {
-      target: { value: '123 Main St, Springfield, IL' },
+      target: { value: '123 Main St, Evanston, IL' },
     });
 
     // make changeFn called with the correct data
     expect(changeFn).toHaveBeenCalledWith({
       target: {
         name: 'location',
-        value: '123 Main St, Springfield, IL',
+        value: '123 Main St, Evanston,Springfield, IL',
       },
     });
   });
